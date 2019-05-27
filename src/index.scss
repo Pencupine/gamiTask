@@ -1,0 +1,78 @@
+/* Variables  ---------------------------------------------*/
+$bp3-navbar-height: 25px;
+
+/* General settings ---------------------------------------*/
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100hv;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.navBarPadding {
+  padding: $bp3-navbar-height;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* Landing css */
+#landingPadding {
+  padding: 10%;
+}
+
+.landing {
+  width: 100%;
+  height: 100%;
+  min-width: 100%;
+  min-height: 100%;
+  position: relative;
+}
+.landing::before {
+  background-image: url(assets/img/blur-blurry-coffee-273222.jpg);
+  background-size: cover;
+  background-position: center;
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: -2;
+  opacity: 0.4;
+}
+.landing::after {
+  background-color: #563d7c;
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100vh;
+  z-index: -1;
+  opacity: 0.6;
+}
+/* NavBar css ----------------------------------------------*/
+.navBar {
+  z-index: 1;
+  width: 100%;
+}
+
+.dragable {
+  -webkit-app-region: drag;
+}
+
+.fixedToTop {
+  position: fixed;
+  top: 0;
+}
+
+.non-dragable {
+  -webkit-app-region: no-drag;
+}

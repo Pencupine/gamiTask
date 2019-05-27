@@ -1,0 +1,52 @@
+{
+  "name": "gamitask-1.1.2",
+  "version": "1.1.2",
+  "description": "An app that gamifies your task management skills.",
+  "main": "app/main.js",
+  "scripts": {
+    "electron": "electron .",
+    "postinstall": "install-app-deps",
+    "start": "gulp watch:run",
+    "release": "gulp release"
+  },
+  "author": "Pencupine",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/plugin-proposal-export-default-from": "^7.2.0",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-react": "^7.0.0",
+    "electron": "^5.0.2",
+    "electron-builder": "^20.40.2",
+    "electron-reload": "^1.4.0",
+    "firebase": "^6.0.4",
+    "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-css": "^0.1.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-sourcemaps": "^2.6.5",
+    "node-sass": "^4.12.0"
+  },
+  "build": {
+    "appId": "pencupine.template.app",
+    "files": [
+      "app/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "publish": null
+  },
+  "dependencies": {
+    "@blueprintjs/core": "^3.15.1",
+    "@firebase/app": "^0.4.3",
+    "@firebase/auth": "^0.11.2",
+    "classnames": "^2.2.6",
+    "electron-is-dev": "^1.1.0",
+    "grpc": "^1.21.1",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-router-dom": "^5.0.0"
+  }
+}
