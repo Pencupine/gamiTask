@@ -5,9 +5,15 @@ import Landing from "./components/layout/Landing";
 import NavBar from "./components/layout/NavBar";
 import LogIn from "./components/auth/LogIn";
 import SignUp from "./components/auth/SignUp";
-import Dashboard from "./components/dashboard/Dashboard";
-import Settings from "./components/dashboard/Settings";
+import Settings from "./components/settings/Settings";
 import SideBar from "./components/layout/SideBar";
+import Home from "./components/workspaces/home/Home";
+import TaskMan from "./components/workspaces/taskMan/TaskMan";
+import Notes from "./components/workspaces/notes/Notes";
+import Calender from "./components/workspaces/calender/Calender";
+import Monies from "./components/workspaces/monies/Monies";
+import TagsGallery from "./components/workspaces/tagsgallery/TagsGallery";
+import Archives from "./components/workspaces/archives/Archives";
 
 export default class AppComp extends Component {
   constructor(props) {
@@ -46,8 +52,14 @@ export default class AppComp extends Component {
             <div style={{ gridColumnStart: "2" }}>
               <Route exact path="/login" component={LogIn} />
               <Route exact path="/signup" component={SignUp} />
-              <Route path="/app" component={Dashboard} />
+              <Route path="/home" component={Home} />
               <Route exact path="/settings" component={Settings} />
+              <Route exact path="/taskman" component={TaskMan} />
+              <Route exact path="/notes" component={Notes} />
+              <Route exact path="/calender" component={Calender} />
+              <Route exact path="/monies" component={Monies} />
+              <Route exact path="/tagsGallery" component={TagsGallery} />
+              <Route exact path="/archives" component={Archives} />
             </div>
           </div>
         </Router>

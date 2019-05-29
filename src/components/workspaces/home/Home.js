@@ -1,6 +1,10 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import { Card, Elevation } from "@blueprintjs/core";
+
+import TaskCard from "./TasksCard";
+import TimelineCard from "./TimelineCard";
+import NoticeCard from "./NoticeCard";
+import InboxCard from "./InboxCard";
 
 export default class Dashboard extends Component {
   render() {
@@ -26,12 +30,8 @@ export default class Dashboard extends Component {
                 height: "100%"
               }}
             >
-              <Card
-                // className="bp3-dark"
-                elevation={Elevation.TWO}
-                style={{ height: "100%" }}
-              >
-                <h1>TimeLine</h1>
+              <Card elevation={Elevation.TWO} style={{ height: "100%" }}>
+                <TimelineCard />
               </Card>
             </div>
             <div
@@ -52,7 +52,7 @@ export default class Dashboard extends Component {
                     elevation={Elevation.TWO}
                     style={{ height: "100%" }}
                   >
-                    <h1>Tasks</h1>
+                    <TaskCard />
                   </Card>
                 </div>
                 <div
@@ -68,7 +68,7 @@ export default class Dashboard extends Component {
                     elevation={Elevation.TWO}
                     style={{ height: "100%" }}
                   >
-                    <h1>Notice Board</h1>
+                    <NoticeCard />
                   </Card>
                 </div>
               </div>
@@ -85,7 +85,7 @@ export default class Dashboard extends Component {
                   elevation={Elevation.TWO}
                   style={{ height: "100%" }}
                 >
-                  <h1>Note</h1>
+                  <InboxCard />
                 </Card>
               </div>
             </div>

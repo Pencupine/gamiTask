@@ -23,7 +23,7 @@ class Landing extends Component {
               </p>
               <hr />
               <div>
-                <Link to="/app">
+                <Link to="/home">
                   <Button
                     intent={"primary"}
                     onClick={() => {
