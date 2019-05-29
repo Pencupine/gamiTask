@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { ipcRenderer } from "electron";
-// import firebase from "firebase";
 
 import {
   Button,
@@ -31,7 +30,6 @@ class SignUp extends Component {
     console.log(email, password, retypePassword);
     if (password == retypePassword) {
       this.setState({ valid: true });
-      // console.log(firebase);
 
       const value = {
         email: email,
@@ -39,22 +37,6 @@ class SignUp extends Component {
       };
       console.log("Sending Sign Up Request");
       ipcRenderer.send("googleSignUp", value);
-      //     const firebaseConfig = {
-      //       apiKey: "AIzaSyDBF8gzhskQhkIoxTrr0H1LMAhZOyqbhfE",
-      //       authDomain: "electron-react-firebase.firebaseapp.com",
-      //       databaseURL: "https://electron-react-firebase.firebaseio.com",
-      //       projectId: "electron-react-firebase",
-      //       storageBucket: "electron-react-firebase.appspot.com",
-      //       messagingSenderId: "565833849649",
-      //       appId: "1:565833849649:web:93ce6bf50b4623df"
-      //     };
-
-      // ipcRenderer.on("signUpGoogleProvider", (event, value) => {
-      //     firebase.initializeApp(firebaseConfig);
-      //     console.log(firebase);
-      //     const provider = new firebase.auth.GoogleAuthProvider();
-      //     // firebase.auth().signInWithRedirect(provider);
-      //     // });
     } else {
       this.setState({ valid: false });
     }

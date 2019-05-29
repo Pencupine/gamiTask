@@ -3,23 +3,6 @@ const { app, BrowserWindow, ipcMain } = require("electron");
 const url = require("url");
 const path = require("path");
 const isDev = require("electron-is-dev");
-// const * as firebase = require("firebase");
-
-// FIREBASE CONFIG-------------------------------
-
-// const firebaseConfig = {
-//   apiKey: "AIzaSyDBF8gzhskQhkIoxTrr0H1LMAhZOyqbhfE",
-//   authDomain: "electron-react-firebase.firebaseapp.com",
-//   databaseURL: "https://electron-react-firebase.firebaseio.com",
-//   projectId: "electron-react-firebase",
-//   storageBucket: "electron-react-firebase.appspot.com",
-//   messagingSenderId: "565833849649",
-//   appId: "1:565833849649:web:93ce6bf50b4623df"
-// };
-
-// firebase.initializeApp(firebaseConfig);
-
-// ----------------------------------------------
 
 // For easy reloading in dev environment
 if (isDev) {
@@ -80,7 +63,7 @@ app.on("activate", function() {
 // Different IPC Processes-------------------------------------------------------------------
 var provider = null;
 ipcMain.on("googleSignUp", (event, value) => {
-  console.log("Hello!");
+  console.log("NewUserRequest!");
   signUpChildWindow = new BrowserWindow({
     parent: mainWindow,
     modal: true,
@@ -96,13 +79,4 @@ ipcMain.on("googleSignUp", (event, value) => {
   signUpChildWindow.on("ready-to-show", () => {
     signUpChildWindow.show();
   });
-  //   console.log("Sign Up Request recieved");
-  //   signUpChildWindow.on("ready-to-show", () => {
-  //     provider = new firebase.auth.GoogleAuthProvider();
-  //   });
-  //   signUpChildWindow.webContents.send("signUpGoogleProvider", {
-  //     config: firebaseConfig,
-  //     provider: provider
-  //   });
 });
-// );

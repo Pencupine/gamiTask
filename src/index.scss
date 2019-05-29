@@ -13,14 +13,17 @@ $bp3-navbar-height: 25px;
 }
 
 .navBarPadding {
-  padding: $bp3-navbar-height;
+  padding-top: $bp3-navbar-height;
+  padding-bottom: $bp3-navbar-height;
 }
 
 .text-center {
   text-align: center;
 }
 
-/* Landing css */
+/* AppComp css --------------------------------------------*/
+
+/* Landing css -------------------------------------------*/
 #landingPadding {
   padding: 10%;
 }
