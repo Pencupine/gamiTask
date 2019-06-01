@@ -10,11 +10,14 @@ class Landing extends Component {
   render() {
     // console.log(this.props);
     return (
-      <div className="landing">
+      <div className="">
         <div className="navBarPadding" />
-        <div className="container">
-          <div className="row">
-            <div className="col-md-12 text-center">
+        <div className="landingResize">
+          <div className="landingImage" />
+          <div className="landingOverlay" />
+          <div style={{ position: "relative" }}>
+            <div className="col-md-1" />
+            <div className="col-md-10 text-center">
               <div id="landingPadding" />
               <h1>GamiTask For Windows</h1>
               <p className="">

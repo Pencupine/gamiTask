@@ -6,7 +6,7 @@ export default class TasksCard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      spinnerValue: 0.4
+      spinnerValue: 0.9
     };
   }
 
@@ -29,9 +29,7 @@ export default class TasksCard extends Component {
               content="Tasks"
               position={Position.BOTTOM}
             >
-              <Link to="/taskman" style={{ textDecoration: "none" }}>
-                <h4>Tasks</h4>
-              </Link>
+              <h4>Tasks</h4>
             </Tooltip>
           </div>
           <div
@@ -40,7 +38,7 @@ export default class TasksCard extends Component {
               color: "#8A9BA8"
             }}
           >
-            <h4>80%</h4>
+            <h4>{this.state.spinnerValue * 100}%</h4>
           </div>
           <div className="col-md-3 text-center">
             <Spinner

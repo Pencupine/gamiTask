@@ -1,17 +1,26 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
-import { Icon, Position, Tooltip, Intent } from "@blueprintjs/core";
+import { Icon, Position, Tooltip, Intent, Tab, Tabs } from "@blueprintjs/core";
 
 import history from "../../tools/history";
+
+const electron = require("electron");
+const ipcRenderer = electron.ipcRenderer;
 
 class NavBar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      menuOpen: false
+      menuOpen: false,
+      fullscreen: false,
+      minimized: false
     };
     this.closeMenu = this.closeMenu.bind(this);
     this.openMenu = this.openMenu.bind(this);
+    this.maximizeWindow = this.maximizeWindow.bind(this);
+    this.unmaximizeWindow = this.unmaximizeWindow.bind(this);
+    this.minimizeWindow = this.minimizeWindow.bind(this);
+    // this.restoreWindow = this.restoreWindow.bind(this);
   }
 
   goForward() {
@@ -28,6 +37,26 @@ class NavBar extends Component {
   openMenu() {
     this.setState({ menuOpen: true });
     this.props.toggleSideBar();
+  }
+  minimizeWindow() {
+    this.setState({ minimized: !this.state.minimized });
+    ipcRenderer.send("minimizeWindow", this.state.minimized);
+  }
+  maximizeWindow() {
+    this.setState({ fullscreen: !this.state.fullscreen });
+    ipcRenderer.send("maximizeWindow", this.state.fullscreen);
+  }
+  // restoreWindow() {
+  //   this.setState({ fullscreen: !this.state.fullscreen });
+  //   ipcRenderer.send("restoreWindow", this.state.fullscreen);
+  // }
+  unmaximizeWindow() {
+    this.setState({ fullscreen: !this.state.fullscreen });
+    ipcRenderer.send("unmaximizeWindow", this.state.fullscreen);
+  }
+  closeWindow() {
+    const val = true;
+    ipcRenderer.send("closeWindow", val);
   }
   render() {
     return (
@@ -57,7 +86,14 @@ class NavBar extends Component {
               content="Home"
               position={Position.BOTTOM}
             >
-              <Link to="/home" style={{ textDecoration: "none" }}>
+              <Link
+                to="/home"
+                style={{
+                  textDecoration: "none",
+                  marginBottom: "2px",
+                  marginLeft: "5px"
+                }}
+              >
                 <button className="bp3-button bp3-minimal non-dragable">
                   <Icon icon="home" />
                 </button>
@@ -69,7 +105,13 @@ class NavBar extends Component {
               content="Tasks"
               position={Position.BOTTOM}
             >
-              <Link to="/taskman" style={{ textDecoration: "none" }}>
+              <Link
+                to="/taskman"
+                style={{
+                  textDecoration: "none",
+                  marginBottom: "2px"
+                }}
+              >
                 <button className="bp3-button bp3-minimal non-dragable bp3-intent-success">
                   <Icon icon="tick-circle" intent={Intent.SUCCESS} />
                 </button>
@@ -80,7 +122,13 @@ class NavBar extends Component {
               content="Notes"
               position={Position.BOTTOM}
             >
-              <Link to="/notes" style={{ textDecoration: "none" }}>
+              <Link
+                to="/notes"
+                style={{
+                  textDecoration: "none",
+                  marginBottom: "2px"
+                }}
+              >
                 <button className="bp3-button bp3-minimal non-dragable bp3-intent-primary">
                   <Icon icon="control" />
                 </button>
@@ -91,7 +139,13 @@ class NavBar extends Component {
               content="Money"
               position={Position.BOTTOM}
             >
-              <Link to="/monies" style={{ textDecoration: "none" }}>
+              <Link
+                to="/monies"
+                style={{
+                  textDecoration: "none",
+                  marginBottom: "2px"
+                }}
+              >
                 <button className="bp3-button bp3-minimal non-dragable bp3-intent-danger">
                   <Icon icon="bank-account" />
                 </button>
@@ -103,7 +157,13 @@ class NavBar extends Component {
               content="Calender"
               position={Position.BOTTOM}
             >
-              <Link to="/calender" style={{ textDecoration: "none" }}>
+              <Link
+                to="/calender"
+                style={{
+                  textDecoration: "none",
+                  marginBottom: "2px"
+                }}
+              >
                 <button className="bp3-button bp3-minimal non-dragable">
                   <Icon icon="calendar" color="#AD99FF" />
                 </button>
@@ -114,7 +174,13 @@ class NavBar extends Component {
               content="Tags"
               position={Position.BOTTOM}
             >
-              <Link to="/tagsGallery" style={{ textDecoration: "none" }}>
+              <Link
+                to="/tagsGallery"
+                style={{
+                  textDecoration: "none",
+                  marginBottom: "2px"
+                }}
+              >
                 <button className="bp3-button bp3-minimal non-dragable">
                   <Icon icon="tag" color="#D1F26D" />
                 </button>
@@ -125,9 +191,32 @@ class NavBar extends Component {
               content="Archives"
               position={Position.BOTTOM}
             >
-              <Link to="/archives" style={{ textDecoration: "none" }}>
+              <Link
+                to="/archives"
+                style={{
+                  textDecoration: "none",
+                  marginBottom: "2px"
+                }}
+              >
                 <button className="bp3-button bp3-minimal non-dragable">
                   <Icon icon="cube" color="#008075" />
+                </button>
+              </Link>
+            </Tooltip>
+            <Tooltip
+              hoverOpenDelay={500}
+              content="Archives"
+              position={Position.BOTTOM}
+            >
+              <Link
+                to="/counter"
+                style={{
+                  textDecoration: "none",
+                  marginBottom: "2px"
+                }}
+              >
+                <button className="bp3-button bp3-minimal non-dragable">
+                  <Icon icon="double-caret-vertical" color="#96622D" />
                 </button>
               </Link>
             </Tooltip>
@@ -176,13 +265,41 @@ class NavBar extends Component {
               position={Position.BOTTOM}
             >
               <Link to="/settings" style={{ textDecoration: "none" }}>
-                <button className="bp3-button bp3-minimal on-dragable">
-                  <Icon icon="cog" />
+                <button className="bp3-button bp3-minimal non-dragable">
+                  <Icon icon="settings" />
                 </button>
               </Link>
             </Tooltip>
             <button className="bp3-button bp3-minimal non-dragable">
               <Icon icon="user" />
+            </button>
+            <span className="bp3-navbar-divider" />
+            <button
+              className="bp3-button bp3-minimal non-dragable"
+              onClick={this.minimizeWindow}
+            >
+              <Icon icon="minus" />
+            </button>
+            {this.state.fullscreen ? (
+              <button
+                className="bp3-button bp3-minimal non-dragable"
+                onClick={this.unmaximizeWindow}
+              >
+                <Icon icon="applications" />
+              </button>
+            ) : (
+              <button
+                className="bp3-button bp3-minimal non-dragable"
+                onClick={this.maximizeWindow}
+              >
+                <Icon icon="application" />
+              </button>
+            )}
+            <button
+              className="bp3-button bp3-minimal bp3-intent-danger non-dragable"
+              onClick={this.closeWindow}
+            >
+              <Icon icon="cross" />
             </button>
           </div>
         </nav>

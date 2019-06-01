@@ -10,14 +10,14 @@ class SideBar extends Component {
         <div className="navBarPadding" />
         <div
           className="sidebar"
-          style={{ backgroundColor: "#381F46", height: "93.75vh" }}
+          style={{ backgroundColor: "#381F46", height: "93.90vh" }}
         >
           {/* <div className="row"> */}
           <div className="row">
             <div
               className="col-md-1 text-center"
               style={{
-                height: "93.75vh",
+                height: "93.90vh",
                 width: "65px",
                 backgroundColor: "#2D1B36"
               }}

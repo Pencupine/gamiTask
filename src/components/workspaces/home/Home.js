@@ -30,7 +30,11 @@ export default class Dashboard extends Component {
                 height: "100%"
               }}
             >
-              <Card elevation={Elevation.TWO} style={{ height: "100%" }}>
+              <Card
+                className="bp3-dark"
+                elevation={Elevation.TWO}
+                style={{ height: "100%" }}
+              >
                 <TimelineCard />
               </Card>
             </div>
@@ -38,7 +42,7 @@ export default class Dashboard extends Component {
               className="col-md-9"
               style={{ height: "100%", backgroundColor: "#41798E" }}
             >
-              <div className="row" style={{ height: "35%" }}>
+              <div className="row" style={{ height: "40%" }}>
                 <div
                   className="col-md-4"
                   style={{
@@ -48,7 +52,7 @@ export default class Dashboard extends Component {
                   }}
                 >
                   <Card
-                    // className="bp3-dark"
+                    className="bp3-dark"
                     elevation={Elevation.TWO}
                     style={{ height: "100%" }}
                   >
@@ -64,7 +68,7 @@ export default class Dashboard extends Component {
                   }}
                 >
                   <Card
-                    // className="bp3-dark"
+                    className="bp3-dark"
                     elevation={Elevation.TWO}
                     style={{ height: "100%" }}
                   >
@@ -76,12 +80,12 @@ export default class Dashboard extends Component {
                 className="row"
                 style={{
                   padding: "7.5px",
-                  height: "65%"
+                  height: "60%"
                 }}
               >
                 {" "}
                 <Card
-                  // className="bp3-dark"
+                  className="bp3-dark"
                   elevation={Elevation.TWO}
                   style={{ height: "100%" }}
                 >

@@ -4,6 +4,8 @@ const url = require("url");
 const path = require("path");
 const isDev = require("electron-is-dev");
 
+require("./fileAPI");
+
 // For easy reloading in dev environment
 if (isDev) {
   require("electron-reload")(__dirname, __dirname, {
@@ -21,8 +23,13 @@ function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 1200,
-    height: 1000,
+    height: 900,
+    useContentSize: true,
     autoHideMenuBar: true,
+    resizable: true,
+    minimizable: true,
+    maximizable: true,
+    frame: false,
     webPreferences: {
       nodeIntegration: true
     }
@@ -61,6 +68,20 @@ app.on("activate", function() {
 });
 
 // Different IPC Processes-------------------------------------------------------------------
+// Window operations
+ipcMain.on("minimizeWindow", (event, value) => {
+  mainWindow.minimize();
+});
+ipcMain.on("maximizeWindow", (event, value) => {
+  mainWindow.maximize();
+});
+ipcMain.on("unmaximizeWindow", (event, value) => {
+  mainWindow.unmaximize();
+});
+ipcMain.on("closeWindow", (event, value) => {
+  if (process.platform !== "darwin") app.quit();
+});
+
 var provider = null;
 ipcMain.on("googleSignUp", (event, value) => {
   console.log("NewUserRequest!");
