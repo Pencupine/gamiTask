@@ -1,13 +1,11 @@
-// Modules to control application life and create native browser window
+// Modules to control application life
 const { app, BrowserWindow, ipcMain } = require("electron");
 const url = require("url");
 const path = require("path");
 const isDev = require("electron-is-dev");
 const fs = require("fs");
 
-// require("fileAPI.js`");
-
-// For easy reloading in dev environment
+// --------For easy reloading in dev environment--------------------
 if (isDev) {
   require("electron-reload")(__dirname, __dirname, {
     electron: require(`${__dirname}/../node_modules/electron`)
@@ -16,12 +14,19 @@ if (isDev) {
     "Ignore this message... There is some problem with the electron-reload module. Please reload the 'electron .' manually!!!"
   );
 }
+//------------------------XXXX--------------------------------------
+
+//
+//
+//
+// ================================================================================================
+//                                      ELECTRON APP
+// ------------------------------------------------------------------------------------------------
 
 let mainWindow = null;
 let signUpChildWindow = null;
 
 function createWindow() {
-  // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 900,
@@ -44,10 +49,9 @@ function createWindow() {
     })
   );
 
-  // Open the DevTools.
+  // DevTools.
   // mainWindow.webContents.openDevTools()
 
-  // Emitted when the window is closed.
   mainWindow.on("closed", function() {
     mainWindow = null;
   });
@@ -57,8 +61,7 @@ app.on("ready", createWindow);
 
 // Quit when all windows are closed.
 app.on("window-all-closed", function() {
-  // On macOS it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
+  // On macOS quits explicitly with Cmd + Q
   if (process.platform !== "darwin") app.quit();
 });
 
@@ -68,8 +71,9 @@ app.on("activate", function() {
   if (mainWindow === null) createWindow();
 });
 
-// Different IPC Processes-------------------------------------------------------------------
-// Window operations
+// ================================================================================================
+//                                  WINDOW OPERATIONS
+// ------------------------------------------------------------------------------------------------
 ipcMain.on("minimizeWindow", (event, value) => {
   mainWindow.minimize();
 });
@@ -103,10 +107,22 @@ ipcMain.on("googleSignUp", (event, value) => {
     signUpChildWindow.show();
   });
 });
+// ---------------------------XXX------------------------------
 
-// FOR CRUD API --------------------------------------------------------------------------------------
+//
+//
+//
+
+// ====================================================================================================
+//                   /////  //////   //  //  //////        ///    ///////  ////
+//                  //      //   //  //  //  //   //      // //   //   //   //
+//                  //      //////   //  //  //   //     ///////  //////    //
+//                   /////  //   //   ////   //////     //     // //       ////
+// ____________________________________________________________________________________________________
+
+// Database File URL-------------------
 const fileName = `../data.json`;
-
+// ------------------------------------
 var oldData;
 var fileChanged = false;
 
@@ -114,8 +130,9 @@ readDatabase();
 
 setInterval(checkForChanges, 10000);
 
-var timeAfterSaving = 0;
+// Change Checker----------------
 
+var timeAfterSaving = 0;
 function checkForChanges() {
   if (fileChanged === true) {
     writeDatabase(oldData);
@@ -126,6 +143,7 @@ function checkForChanges() {
   }
 }
 
+// File Reader Function-----------
 function readDatabase() {
   fs.readFile(fileName, "utf-8", (err, data) => {
     if (err) {
@@ -137,12 +155,12 @@ function readDatabase() {
     } else {
       console.log("Reading Old Data!");
       oldData = JSON.parse(data);
-      console.log(oldData);
       fileChanged = false;
     }
   });
 }
 
+// File Writing Function------------
 function writeDatabase(newData) {
   fs.writeFile(fileName, JSON.stringify(newData, null, 2), err => {
     if (err) {
@@ -154,6 +172,7 @@ function writeDatabase(newData) {
   });
 }
 
+//-----Initiated data----------------
 function createNewFile() {
   var initiatedData = {
     database: [
@@ -177,65 +196,10 @@ function createNewFile() {
   return initiatedData;
 }
 
-ipcMain.on("newTaskCard", (event, value) => {
-  var tasks = oldData.database[0].tasks;
-  // fs.readFile(fileName, "utf-8", (err, data) => {
-  //   if (err) {
-  //     oldData = createNewFile();
-  //     console.log(oldData);
+//=========================================================================
+//--------------------------------TASKS------------------------------------
 
-  //     var tasks = oldData.tasks;
-  tasks.totalTasks = tasks.totalTasks + 1;
-  tasks.allTasks[value.taskType].taskCards.push({
-    title: value.title,
-    dateCreated: value.dateCreated
-  });
-  fileChanged = true;
-  updateTasks(value.taskType, oldData);
-
-  //     fs.writeFile(fileName, JSON.stringify(oldData, null, 2), err => {
-  //       if (err) {
-  //         console.log(err.message);
-  //       } else {
-  //         console.log("File Successfully Created");
-  //         fs.readFile(fileName, "utf-8", (err, data) => {
-  //           if (err) {
-  //             console.log(err.message);
-  //           } else {
-  //             console.log(JSON.parse(data));
-  //             updateTasks(value.taskType, oldData);
-  //           }
-  //         });
-  //       }
-  //     });
-  //   } else {
-  //     oldData = JSON.parse(data);
-  //     console.log(oldData);
-  //     var tasks = oldData.tasks;
-  //     tasks.totalTasks = tasks.totalTasks + 1;
-  //     tasks.allTasks[value.taskType].taskCards.push({
-  //       cardID: tasks.totalTasks,
-  //       title: value.title,
-  //       dateCreated: value.dateCreated
-  //     });
-  //     fs.writeFile(fileName, JSON.stringify(oldData, null, 2), err => {
-  //       if (err) {
-  //         console.log(err.message);
-  //       } else {
-  //         console.log("File Successfully Created");
-  //         fs.readFile(fileName, "utf-8", (err, data) => {
-  //           if (err) {
-  //             console.log(err.message);
-  //           } else {
-  //             console.log(JSON.parse(data));
-  //             updateTasks(value.taskType, oldData);
-  //           }
-  //         });
-  //       }
-  //     });
-  //   }
-  // });
-});
+//--------- For Sending Updated Tasks List----------
 
 function updateTasks(type, data) {
   const res = data.database[0].tasks.allTasks[type];
@@ -243,13 +207,20 @@ function updateTasks(type, data) {
   else if (type == 1) mainWindow.webContents.send("kanbanTasks", res);
 }
 
+//----------All Tasks List Request---------
 ipcMain.on("allTasks", (event, type) => {
-  // fs.readFile(fileName, "utf-8", (err, data) => {
-  // if (err) {
-  // mainWindow.webContents.send("allTasks", err);
-  // } else {
-  // const jsonData = JSON.parse(data);
   updateTasks(type, oldData);
-  // }
-  // });
+});
+
+//-----------New Task Request---------------
+ipcMain.on("newTaskCard", (event, value) => {
+  var tasks = oldData.database[0].tasks;
+  tasks.totalTasks = tasks.totalTasks + 1;
+  tasks.allTasks[value.taskType].taskCards.push({
+    title: value.title,
+    dateCreated: value.dateCreated
+  });
+
+  fileChanged = true;
+  updateTasks(value.taskType, oldData);
 });
