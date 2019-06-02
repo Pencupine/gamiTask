@@ -33,10 +33,7 @@ export default class AppComp extends Component {
 
   render() {
     return (
-      <div
-        className="AppComp"
-        // style={{ backgroundColor: "pink" }}
-      >
+      <div className="AppComp">
         <Router>
           <NavBar toggleSideBar={this.toggleSideBar} />
 

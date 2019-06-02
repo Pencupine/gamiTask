@@ -63,10 +63,12 @@ export default class TaskMan extends Component {
             </div>
             <div
               style={{
+                maxHeight: "100%",
                 gridRow: "2",
                 gridColumnStart: "1",
                 gridColumnEnd: "3",
-                backgroundColor: "#3B3B70"
+                backgroundColor: "#3B3B70",
+                overflow: "hidden"
               }}
             >
               <ToDoLists />

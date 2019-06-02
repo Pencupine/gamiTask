@@ -1,22 +1,39 @@
 import React, { Component } from "react";
-import { Card, Checkbox, Icon, Button } from "@blueprintjs/core";
+import {
+  Card,
+  Checkbox,
+  Icon,
+  Button,
+  EditableText,
+  InputGroup
+} from "@blueprintjs/core";
 
 import TaskCheckboxGroup from "../../commonUtils/TaskCheckboxGroup";
+
+import { ipcRenderer } from "electron";
+import { getCurrentDate } from "../../../tools/getCurrentDate";
 
 export default class TaskCards extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      taskCompleted: false
-    };
 
-    this.handleTaskToggle = this.handleTaskToggle.bind(this);
+    this.handleNewTask = this.handleNewTask.bind(this);
   }
 
-  handleTaskToggle() {
-    this.setState({
-      taskCompleted: !this.state.taskCompleted
-    });
+  handleNewTask(event) {
+    const node = document.getElementsByClassName("taskInputGroup")[
+      this.props.type
+    ].lastChild;
+    const title = node.value;
+    console.log(title);
+    node.value = "";
+    const date = getCurrentDate();
+    const value = {
+      title: title,
+      taskType: this.props.type,
+      dateCreated: date
+    };
+    ipcRenderer.send("newTaskCard", value);
   }
 
   render() {
@@ -32,11 +49,11 @@ export default class TaskCards extends Component {
         }}
       >
         <div
-          id="taskCard"
           style={{
             display: "grid",
             padding: "5px",
-            gridTemplateColumns: "8% 84% 8%",
+            maxHeight: "60px",
+            gridTemplateColumns: "7% 86% 7%",
             overflow: "hidden"
           }}
         >
@@ -52,45 +69,43 @@ export default class TaskCards extends Component {
                 maxWidth: "17px"
               }}
             >
-              <Checkbox
+              {/* <Checkbox
                 minimal="true"
                 checked={this.state.taskCompleted}
                 onChange={this.handleTaskToggle}
-              />
+              /> */}
             </div>
             <div
-              // className="text-center"
               style={{
                 gridRow: "2"
               }}
             >
-              <Icon icon="cog" iconSize={12} style={{ color: "#8A9BA8" }} />
+              {/* <Icon icon="cog" iconSize={12} style={{ color: "#8A9BA8" }} /> */}
             </div>
           </div>
           <div
+            id="newTaskCard"
             style={{
               gridColumn: "2",
+              maxHeight: "50px",
               backgroundColor: "#E1E8ED",
               borderRadius: "5px",
-              padding: "5px",
-              wordWrap: "break-word",
-              overflow: "auto"
+              padding: "5px"
             }}
           >
-            {this.props.taskCardData.title}
-          </div>
-          <div className="text-center" style={{ gridColumn: "3" }}>
-            <Icon
-              icon="tag"
-              iconSize={12}
-              style={{ color: "#8A9BA8", marginBottom: "17px" }}
-            />
-            <Icon
-              icon="layout-linear"
-              iconSize={12}
-              style={{ color: "#8A9BA8" }}
+            <InputGroup
+              className="taskInputGroup"
+              id="newTaskCard"
+              onKeyPress={ev => {
+                if (ev.key === "Enter") {
+                  this.handleNewTask();
+                }
+              }}
+              leftIcon="plus"
+              maxLength={40}
             />
           </div>
+          <div className="text-center" style={{ gridColumn: "3" }} />
         </div>
       </div>
     );
