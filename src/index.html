@@ -17,20 +17,22 @@
       href="../node_modules/@blueprintjs/icons/lib/css/blueprint-icons.css"
       rel="stylesheet"
     />
-    <!----------------------------- -->
-    <!-- The core Firebase JS SDK is always required and must be listed first -->
-    <script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-app.js"></script>
+    <!-- SCSS files in Different folders -->
+    <link href="./components/workspaces/workspace.css" rel="stylesheet" />
 
-    <!-- TODO: Add SDKs for Firebase products that you want to use
-     https://firebase.google.com/docs/web/setup#config-web-app -->
+    <script>
+      if (typeof module === "object") {
+        window.module = module;
+        module = undefined;
+      }
+    </script>
+    <script type="text/javascript" src="./assets/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="./plugins/jquery-ui.min.js"></script>
   </head>
   <body>
     <div id="root"></div>
-
     <script type="application/javascript">
       require("./index.js");
     </script>
   </body>
-  <!-- <script tyoe="text/javascript" src="./assets/jquery-3.4.1.min.js"></script>
-  <script type="text/javascript" src="./assets/bootstrap.min.js"></script> -->
 </html>

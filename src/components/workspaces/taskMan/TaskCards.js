@@ -23,6 +23,7 @@ export default class TaskCards extends Component {
     return (
       <div
         className="card"
+        draggable="true"
         style={{
           backgroundColor: "white",
           boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)",

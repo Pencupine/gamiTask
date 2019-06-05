@@ -84,7 +84,7 @@ ipcMain.on("unmaximizeWindow", (event, value) => {
   mainWindow.unmaximize();
 });
 ipcMain.on("closeWindow", (event, value) => {
-  writeDatabase(oldData);
+  writeDatabase(alphaData);
   if (process.platform !== "darwin") app.quit();
 });
 
@@ -121,9 +121,14 @@ ipcMain.on("googleSignUp", (event, value) => {
 // ____________________________________________________________________________________________________
 
 // Database File URL-------------------
-const fileName = `../data.json`;
+const fileName = `C:/Users/LENOVO/Documents/gamiTask/data.json`;
+if (!fs.existsSync("C:/Users/LENOVO/Documents/gamiTask"))
+  fs.mkdir("C:/Users/LENOVO/Documents/gamiTask", err => {
+    if (err) console.log(err.message);
+    else console.log("Folder Successfully Created!");
+  });
 // ------------------------------------
-var oldData;
+var alphaData;
 var fileChanged = false;
 
 readDatabase();
@@ -135,7 +140,7 @@ setInterval(checkForChanges, 10000);
 var timeAfterSaving = 0;
 function checkForChanges() {
   if (fileChanged === true) {
-    writeDatabase(oldData);
+    writeDatabase(alphaData);
     timeAfterSaving = 0;
   } else {
     timeAfterSaving = timeAfterSaving + 1;
@@ -150,11 +155,12 @@ function readDatabase() {
       console.log(err.message);
       console.log("Please make a copy of old Data as soon as possible!");
       console.log("Creating New File!");
-      oldData = createNewFile();
+      alphaData = createNewFile();
+      console.log(alphaData);
       fileChanged = false;
     } else {
       console.log("Reading Old Data!");
-      oldData = JSON.parse(data);
+      alphaData = JSON.parse(data);
       fileChanged = false;
     }
   });
@@ -186,7 +192,20 @@ function createNewFile() {
             },
             {
               taskType: 1,
-              taskCards: []
+              kanbanCards: [
+                {
+                  kanbanType: 0,
+                  taskCards: []
+                },
+                {
+                  kanbanType: 1,
+                  taskCards: []
+                },
+                {
+                  kanbanType: 2,
+                  taskCards: []
+                }
+              ]
             }
           ]
         }
@@ -207,20 +226,131 @@ function updateTasks(type, data) {
   else if (type == 1) mainWindow.webContents.send("kanbanTasks", res);
 }
 
-//----------All Tasks List Request---------
-ipcMain.on("allTasks", (event, type) => {
-  updateTasks(type, oldData);
+//--------------Tasks List Request---------------
+ipcMain.on("allDailiesTasks", (event, type) => {
+  updateTasks(0, alphaData);
+});
+
+ipcMain.on("allKanbanTasks", (event, type) => {
+  updateTasks(1, alphaData);
 });
 
 //-----------New Task Request---------------
 ipcMain.on("newTaskCard", (event, value) => {
-  var tasks = oldData.database[0].tasks;
+  var tasks = alphaData.database[0].tasks;
   tasks.totalTasks = tasks.totalTasks + 1;
-  tasks.allTasks[value.taskType].taskCards.push({
+  var taskStack =
+    value.taskType == 0
+      ? tasks.allTasks[0].taskCards
+      : tasks.allTasks[1].kanbanCards[value.kanbanType].taskCards;
+  taskStack.push({
+    taskID: tasks.totalTasks,
     title: value.title,
     dateCreated: value.dateCreated
   });
 
   fileChanged = true;
-  updateTasks(value.taskType, oldData);
+  updateTasks(value.taskType, alphaData);
 });
+
+// -----------Sort Dailies Task Request---------------
+var count = 0;
+ipcMain.on("sortTaskCard", (event, value) => {
+  console.log("new Sort Request");
+  var tasks = alphaData.database[0].tasks;
+  var taskCards = tasks.allTasks[value.taskType].taskCards;
+  console.log(taskCards);
+  var i;
+  var newTaskCardsArray = [];
+  var newOrder = [];
+  for (i = 0; i < value.order.length; i++) {
+    var obj = taskCards.find(taskCard => {
+      if (taskCard.taskID === value.order[i]) {
+        return taskCard;
+      }
+    });
+    newTaskCardsArray.push(obj);
+    newOrder.push(obj.taskID);
+  }
+  console.log(count++);
+  console.log(newTaskCardsArray);
+
+  for (i = 0; i < taskCards.length; i++) {
+    taskCards[i] = newTaskCardsArray[i];
+  }
+  fileChanged = true;
+  // updateTasks(value.taskType, alphaData);
+});
+
+// -------------Sort Kanban Task Request----------------
+var kanbanColFlag = [false, false, false];
+var kanbanColOrder = [[], [], []];
+// kanbanNewOrder = [{},{},{}];
+ipcMain.on("sortKanbanTaskColumn", (event, value) => {
+  kanbanColFlag[value.kanbanType] = true;
+  kanbanColOrder[value.kanbanType] = value.colOrder;
+  console.log(value.colOrder);
+
+  if (kanbanColFlag[0] && kanbanColFlag[1]) {
+    console.log(kanbanColOrder);
+    console.log(kanbanColFlag);
+    sortAndSaveNewColumns(0, 1, kanbanColOrder[0], kanbanColOrder[1]);
+    kanbanColFlag = [false, false, false];
+    kanbanColOrder = [[], [], []];
+  }
+  if (kanbanColFlag[1] && kanbanColFlag[2]) {
+    console.log(kanbanColOrder);
+    console.log(kanbanColFlag);
+    sortAndSaveNewColumns(1, 2, kanbanColOrder[1], kanbanColOrder[2]);
+    kanbanColFlag = [false, false, false];
+    kanbanColOrder = [[], [], []];
+  }
+});
+
+function sortAndSaveNewColumns(a, b, order_a, order_b) {
+  var kanbanCards = alphaData.database[0].tasks.allTasks[1].kanbanCards;
+  var newKanbanOrder = [[], [], []];
+  var i;
+  console.log("a : " + a);
+  console.log("b : " + b);
+  console.log("order_a : " + order_a);
+  console.log("order_b : " + order_b);
+
+  var taskObj;
+  for (i = 0; i < order_a.length; i++) {
+    taskObj = undefined;
+
+    if (kanbanCards[a].taskCards[0] !== undefined)
+      taskObj = kanbanCards[a].taskCards.find(taskCard => {
+        if (taskCard.taskID == order_a[i]) return taskCard;
+      });
+    if (taskObj == undefined)
+      if (kanbanCards[b].taskCards[0] !== undefined)
+        taskObj = kanbanCards[b].taskCards.find(taskCard => {
+          if (taskCard.taskID == order_a[i]) return taskCard;
+        });
+    newKanbanOrder[a].push(taskObj);
+  }
+
+  for (i = 0; i < order_b.length; i++) {
+    taskObj = undefined;
+
+    if (kanbanCards[a].taskCards[0] !== undefined)
+      taskObj = kanbanCards[a].taskCards.find(taskCard => {
+        if (taskCard.taskID == order_b[i]) return taskCard;
+      });
+    if (taskObj == undefined)
+      if (kanbanCards[b].taskCards[0] !== undefined)
+        taskObj = kanbanCards[b].taskCards.find(taskCard => {
+          if (taskCard.taskID == order_b[i]) return taskCard;
+        });
+    newKanbanOrder[b].push(taskObj);
+  }
+  console.log(newKanbanOrder);
+
+  kanbanCards[a].taskCards = newKanbanOrder[a];
+  kanbanCards[b].taskCards = newKanbanOrder[b];
+
+  newKanbanOrder = [[], [], []];
+  fileChanged = true;
+}

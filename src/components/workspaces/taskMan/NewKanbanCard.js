@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { InputGroup } from "@blueprintjs/core";
 
-// import TaskCheckboxGroup from "../../commonUtils/TaskCheckboxGroup";
-
 import { ipcRenderer } from "electron";
 import { getCurrentDate } from "../../../tools/getCurrentDate";
 
@@ -10,18 +8,21 @@ export default class TaskCards extends Component {
   constructor(props) {
     super(props);
 
-    this.handleNewTask = this.handleNewTask.bind(this);
+    this.handleNewKanbanTask = this.handleNewKanbanTask.bind(this);
   }
 
-  handleNewTask(event) {
-    const node = document.getElementsByClassName("taskInputGroup")[0].lastChild;
+  handleNewKanbanTask(event) {
+    const nodeNumber = 1 + this.props.kanbanType;
+    const node = document.getElementsByClassName("taskInputGroup")[nodeNumber]
+      .lastChild;
     const title = node.value;
     if (title == "") return;
     node.value = "";
     const date = getCurrentDate();
     const value = {
       title: title,
-      taskType: 0,
+      taskType: 1,
+      kanbanType: this.props.kanbanType,
       dateCreated: date
     };
     ipcRenderer.send("newTaskCard", value);
@@ -86,10 +87,10 @@ export default class TaskCards extends Component {
           >
             <InputGroup
               className="taskInputGroup"
-              id="newTaskCard"
+              id="newKanbanCard"
               onKeyPress={ev => {
                 if (ev.key === "Enter") {
-                  this.handleNewTask();
+                  this.handleNewKanbanTask();
                 }
               }}
               leftIcon="plus"

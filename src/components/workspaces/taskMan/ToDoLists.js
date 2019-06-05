@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Callout } from "@blueprintjs/core";
+import { ipcRenderer } from "electron";
 
 import DailiesList from "./DailiesList";
 import KanbanList from "./KanbanList";
