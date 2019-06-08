@@ -6,21 +6,11 @@ import DailiesList from "./DailiesList";
 import KanbanList from "./KanbanList";
 
 export default class ToDoLists extends Component {
+  componentWillMount() {
+    console.log("Will Mount");
+    ipcRenderer.send("allDailiesTasks", true);
+  }
   render() {
-    const taskCardData = {
-      label: "Dipanjan",
-      taskCompleted: false,
-      tags: [
-        {
-          tagID: "1112",
-          tagName: "asdfasf"
-        },
-        {
-          tagID: "1242",
-          tagName: "asdfrg"
-        }
-      ]
-    };
     return (
       <div>
         <div

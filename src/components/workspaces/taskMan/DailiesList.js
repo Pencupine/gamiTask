@@ -9,52 +9,52 @@ export default class DailiesList extends Component {
     super(props);
 
     this.state = {
-      tasksData: []
+      order: [],
+      taskCards: []
     };
   }
 
-  componentWillMount() {
-    console.log("Will Mount");
-    ipcRenderer.send("allDailiesTasks", true);
-  }
-
   render() {
-    var oldTaskCardStates = this.state.tasksData;
+    // ------------To Recieve New Tasks List------------------------
+    ipcRenderer.on("dailiesTasks", (event, data) => {
+      this.setState({ taskCards: data.tasksData.taskCards, order: data.order });
+    });
 
     // -------------To Handle Changes in the List Order--------------
+
     $(document).ready(function() {
       $(".sortableDailies").sortable();
     });
-    $(".sortableDailies").on("sortupdate", function(event, ui) {
+
+    $(".sortableDailies").one("sortupdate", event => {
       var sortedIDs = $(".sortableDailies").sortable("toArray");
       var i;
       var sortedIDsInt = [];
       for (i = 0; i < sortedIDs.length; i++) {
         sortedIDsInt.push(parseInt(sortedIDs[i]));
       }
-      // console.log(sortedIDsInt);
-      ipcRenderer.send("sortTaskCard", {
-        taskType: 0,
-        order: sortedIDsInt
-      });
+      console.log(sortedIDsInt);
 
-      var newTaskCardStates = [];
-      for (i = 0; i < sortedIDs.length; i++) {
-        newTaskCardStates.push(
-          oldTaskCardStates.find(oldTaskCard => {
-            if (oldTaskCard.taskID == sortedIDsInt[i]) return oldTaskCard;
+      var newTaskCardsState = [];
+      var oldTaskCardsState = this.state.taskCards;
+      for (i = 0; i < sortedIDsInt.length; i++) {
+        newTaskCardsState.push(
+          oldTaskCardsState.find(taskCard => {
+            if (taskCard.taskID == sortedIDsInt[i]) return taskCard;
           })
         );
       }
-      // stateChange(newTaskCardStates);
+
+      this.setState({ order: sortedIDsInt, taskCards: newTaskCardsState });
+
+      ipcRenderer.send("setNewTaskCardOrder", {
+        taskType: 0,
+        colOrder: sortedIDsInt,
+        taskCards: this.state.taskCards
+      });
     });
 
-    ipcRenderer.on("dailiesTasks", (event, data) => {
-      // console.log(data);
-      this.setState({ tasksData: data.taskCards });
-    });
-
-    const taskCards = this.state.tasksData;
+    const taskCards = this.state.taskCards;
     var i = 0;
     var TasksList = taskCards.map(taskCard => {
       return (

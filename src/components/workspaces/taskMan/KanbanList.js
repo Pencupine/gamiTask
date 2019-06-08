@@ -9,7 +9,7 @@ export default class KanbanList extends Component {
     super(props);
 
     this.state = {
-      kanbanData: [{}, {}, {}],
+      kanbanCards: [{}, {}, {}],
       todoFlag: false,
       doingFlag: false,
       doneFlag: false
@@ -21,8 +21,8 @@ export default class KanbanList extends Component {
   }
 
   render() {
-    // var { kanbanData } = this.state;
-    $(document).ready(function() {
+    // var { kanbanCards } = this.state;
+    $(document).ready(() => {
       $(".sortableTodo").sortable({
         connectWith: ".sortableDoing"
       });
@@ -34,7 +34,7 @@ export default class KanbanList extends Component {
       });
     });
 
-    $(".sortableTodo").on("sortupdate", function(event, ui) {
+    $(".sortableTodo").one("sortupdate", (event, ui) => {
       var sortedTodoIDsInt = [];
       var sortedTodoIDs = $(".sortableTodo").sortable("toArray");
       // console.log(sortedTodoIDs);
@@ -44,14 +44,15 @@ export default class KanbanList extends Component {
         sortedTodoIDsInt.push(parseInt(sortedTodoIDs[i]));
       }
 
-      console.log(sortedTodoIDsInt);
-      ipcRenderer.send("sortKanbanTaskColumn", {
-        kanbanType: 0,
-        colOrder: sortedTodoIDsInt
-      });
+      // console.log(sortedTodoIDsInt);
+      // ipcRenderer.send("sortTaskCard", {
+      //   taskType: 1,
+      //   kanbanType: 0,
+      //   colOrder: sortedTodoIDsInt
+      // });
     });
 
-    $(".sortableDoing").on("sortupdate", function(event, ui) {
+    $(".sortableDoing").one("sortupdate", (event, ui) => {
       var sortedDoingIDsInt = [];
       var sortedDoingIDs = $(".sortableDoing").sortable("toArray");
       // console.log(sortedDoingIDs);
@@ -61,14 +62,15 @@ export default class KanbanList extends Component {
         sortedDoingIDsInt.push(parseInt(sortedDoingIDs[i]));
       }
 
-      console.log(sortedDoingIDsInt);
-      ipcRenderer.send("sortKanbanTaskColumn", {
-        kanbanType: 1,
-        colOrder: sortedDoingIDsInt
-      });
+      // console.log(sortedDoingIDsInt);
+      // ipcRenderer.send("sortTaskCard", {
+      //   taskType: 1,
+      //   kanbanType: 1,
+      //   colOrder: sortedDoingIDsInt
+      // });
     });
 
-    $(".sortableDone").on("sortupdate", function(event, ui) {
+    $(".sortableDone").one("sortupdate", (event, ui) => {
       var sortedDoneIDsInt = [];
       var sortedDoneIDs = $(".sortableDone").sortable("toArray");
       // console.log(sortedDoneIDs);
@@ -78,29 +80,30 @@ export default class KanbanList extends Component {
         sortedDoneIDsInt.push(parseInt(sortedDoneIDs[i]));
       }
 
-      console.log(sortedDoneIDsInt);
-      ipcRenderer.send("sortKanbanTaskColumn", {
-        kanbanType: 2,
-        colOrder: sortedDoneIDsInt
-      });
+      // console.log(sortedDoneIDsInt);
+      // ipcRenderer.send("sortTaskCard", {
+      //   taskType: 1,
+      //   kanbanType: 2,
+      //   colOrder: sortedDoneIDsInt
+      // });
     });
 
     // RECIEVING AND SETTING UPDATED LIST------------------------
     ipcRenderer.on("kanbanTasks", (event, data) => {
-      const cardsArray = data.kanbanCards;
+      const kanbanCards = data.tasksData.kanbanCards;
       this.setState({
-        kanbanData: cardsArray
+        kanbanCards: kanbanCards
       });
     });
 
     var TodoList = <div />;
     var DoingList = <div />;
     var DoneList = <div />;
-    const { kanbanData } = this.state;
+    const { kanbanCards } = this.state;
 
-    if (kanbanData[0].taskCards !== undefined) {
-      if (kanbanData[0].taskCards[0] !== undefined) {
-        var todoCards = kanbanData[0].taskCards;
+    if (kanbanCards[0].taskCards !== undefined) {
+      if (kanbanCards[0].taskCards[0] !== undefined) {
+        var todoCards = kanbanCards[0].taskCards;
         TodoList = todoCards.map(todoCard => {
           return (
             <li key={todoCard.taskID} id={todoCard.taskID} draggable="true">
@@ -111,9 +114,9 @@ export default class KanbanList extends Component {
       }
     }
 
-    if (kanbanData[1].taskCards !== undefined) {
-      if (kanbanData[1].taskCards[0] !== undefined) {
-        var doingCards = kanbanData[1].taskCards;
+    if (kanbanCards[1].taskCards !== undefined) {
+      if (kanbanCards[1].taskCards[0] !== undefined) {
+        var doingCards = kanbanCards[1].taskCards;
         DoingList = doingCards.map(doingCard => {
           return (
             <li key={doingCard.taskID} id={doingCard.taskID} draggable="true">
@@ -124,9 +127,9 @@ export default class KanbanList extends Component {
       }
     }
 
-    if (kanbanData[2].taskCards !== undefined) {
-      if (kanbanData[2].taskCards[0] !== undefined) {
-        var doneCards = kanbanData[2].taskCards;
+    if (kanbanCards[2].taskCards !== undefined) {
+      if (kanbanCards[2].taskCards[0] !== undefined) {
+        var doneCards = kanbanCards[2].taskCards;
         DoneList = doneCards.map(doneCard => {
           return (
             <li key={doneCard.taskID} id={doneCard.taskID} draggable="true">
@@ -145,6 +148,7 @@ export default class KanbanList extends Component {
           gridTemplateColumns: "33.33% 33.33% 33.33%"
         }}
       >
+        if I reorder and then add... the bug is triggerred
         <div style={{ gridColumn: "1", paddingRight: "5px" }}>
           <Callout title="To-Dos">
             <ul
