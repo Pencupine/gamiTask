@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 
-import ProgressCircles from "./ProgressCircles";
-import ToDoLists from "./ToDoLists";
-import ProgressBars from "./ProgressBars";
-import Rewards from "./Rewards";
+import ToDoLists from "./todoList/ToDoLists";
+import TopPanel from "./topPanel/TopPanel";
 
 export default class TaskMan extends Component {
   render() {
@@ -22,44 +20,19 @@ export default class TaskMan extends Component {
               height: "93.90vh",
               backgroundColor: "#28335E",
               display: "grid",
-              gridTemplateColumns: "17% 83%",
               gridTemplateRows: "27.5% 72.5%"
             }}
           >
             <div
               style={{
+                maxHeight: "100%",
                 gridRow: "1",
-                gridColumn: "1"
+                gridColumnStart: "1",
+                gridColumnEnd: "3",
+                overflow: "hidden"
               }}
             >
-              <div
-                style={{
-                  height: "100%"
-                }}
-              >
-                <ProgressCircles />
-              </div>
-            </div>
-            <div
-              style={{
-                gridRow: "1",
-                gridColumn: "2",
-                height: "100%"
-              }}
-            >
-              <div>
-                <div className="col-md-6">
-                  <div>
-                    <ProgressBars />
-                  </div>
-                </div>
-                <div
-                  className="col-md-6"
-                  style={{ height: "100%", backgroundColor: "" }}
-                >
-                  <Rewards />
-                </div>
-              </div>
+              <TopPanel />
             </div>
             <div
               style={{

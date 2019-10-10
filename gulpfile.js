@@ -45,6 +45,13 @@ gulp.task("copy-assets", () => {
   return gulp.src("src/assets/**/*").pipe(gulp.dest("app/assets"));
 });
 
+// gulp.task("copy-services", () => {
+//   return gulp
+//     .src(["services/**/*.js"])
+//     .on("error", console.error.bind(console))
+//     .pipe(gulp.dest("app/"));
+// });
+
 gulp.task("copy", gulp.parallel("copy-html", "copy-assets"));
 
 /* Execute */
