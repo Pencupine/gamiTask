@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import { Spinner Intent } from "@blueprintjs/core";
+import { Spinner, Intent } from "@blueprintjs/core";
 
 export default class ProgressCircles extends Component {
   render() {
