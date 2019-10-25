@@ -4,7 +4,7 @@ const url = require("url");
 const path = require("path");
 const isDev = require("electron-is-dev");
 
-const dbConnection = require("./services/dbConnection");
+const dbConnection = require("./services/database/dbConnection");
 
 // --------For easy reloading in dev environment--------------------
 if (isDev) {

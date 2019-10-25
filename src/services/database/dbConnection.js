@@ -12,42 +12,9 @@ function folderCheck() {
     });
 }
 
-//-----Initiated data----------------
+//-----Initiated dataModel----------------
 function createNewFile() {
-  var initiatedData = {
-    database: [
-      {
-        tasks: {
-          totalTasks: 0,
-          nextTaskID: 0,
-          order: [[], [[], [], []]],
-          allTasks: [
-            {
-              taskType: 0,
-              taskCards: []
-            },
-            {
-              taskType: 1,
-              kanbanCards: [
-                {
-                  kanbanType: 0,
-                  taskCards: []
-                },
-                {
-                  kanbanType: 1,
-                  taskCards: []
-                },
-                {
-                  kanbanType: 2,
-                  taskCards: []
-                }
-              ]
-            }
-          ]
-        }
-      }
-    ]
-  };
+  var initiatedData = require('./dbModel');
   return initiatedData;
 }
 
