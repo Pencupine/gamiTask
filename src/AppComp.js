@@ -12,10 +12,10 @@ import TaskMan from "./components/workspaces/taskMan/TaskMan";
 import Notes from "./components/workspaces/notes/Notes";
 import Calender from "./components/workspaces/calender/Calender";
 import Monies from "./components/workspaces/monies/Monies";
-import TagsGallery from "./components/workspaces/tagsgallery/TagsGallery";
+import TagsGallery from "./components/workspaces/tagsGallery/TagsGallery";
 import Archives from "./components/workspaces/archives/Archives";
 
-import history from "./tools/history";
+import history from "./utils/history";
 import Counter from "./components/workspaces/counters/Counter";
 
 export default class AppComp extends Component {

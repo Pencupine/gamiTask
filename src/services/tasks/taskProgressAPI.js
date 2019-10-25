@@ -20,4 +20,4 @@ function updateScores(alphaData, type, mainWindow) {
 //
 // -------------------- Exporting Functions-----------------------
 
-exports.updateSccores = updateSccores;
+exports.updateScores = updateScores;

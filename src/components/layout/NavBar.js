@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { Icon, Position, Tooltip, Intent, Tab, Tabs } from "@blueprintjs/core";
 
-import history from "../../tools/history";
+import history from "../../utils/history";
 
 const electron = require("electron");
 const ipcRenderer = electron.ipcRenderer;

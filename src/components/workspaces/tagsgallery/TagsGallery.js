@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import TagObj from "../../dataObjects/tags/TagObj";
 
 export default class TagsGallery extends Component {
   render() {
@@ -52,7 +53,28 @@ export default class TagsGallery extends Component {
                 backgroundColor: "#3B3B70",
                 padding: "5px"
               }}
-            />
+            >
+              <TagObj
+                title={"Today"}
+                tagStyle={
+                  {
+                    active: true,
+                    round: true,
+                    intent: "none",
+                    interactive: true,
+                    minimal: false
+                  }
+                }
+                actions={
+                  {
+                    onclick: ()=>{
+                        console.log("TagClick");
+                    }
+                  }
+                }
+              >
+              </TagObj>
+            </div>
             <div
               style={{
                 gridRowStart: "2",
