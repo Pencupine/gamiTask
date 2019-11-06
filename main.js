@@ -8,12 +8,12 @@ const dbConnection = require("./services/database/dbConnection");
 
 // --------For easy reloading in dev environment--------------------
 if (isDev) {
-  require("electron-reload")(__dirname, __dirname, {
-    electron: require(`${__dirname}/../node_modules/electron`)
-  });
-  console.log(
-    "Ignore this message... There is some problem with the electron-reload module. Please reload the 'electron .' manually!!!"
-  );
+	require("electron-reload")(__dirname, __dirname, {
+		electron: require(`${__dirname}/../node_modules/electron`)
+	});
+	console.log(
+		"Ignore this message... There is some problem with the electron-reload module. Please reload the 'electron .' manually!!!"
+	);
 }
 //------------------------XXXX--------------------------------------
 //
@@ -33,90 +33,90 @@ let mainWindow = null;
 let signUpChildWindow = null;
 
 function createWindow() {
-  mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 900,
-    useContentSize: true,
-    autoHideMenuBar: true,
-    resizable: true,
-    minimizable: true,
-    maximizable: true,
-    frame: false,
-    webPreferences: {
-      nodeIntegration: true
-    }
-  });
+	mainWindow = new BrowserWindow({
+		width: 1200,
+		height: 900,
+		useContentSize: true,
+		autoHideMenuBar: true,
+		resizable: true,
+		minimizable: true,
+		maximizable: true,
+		frame: false,
+		webPreferences: {
+			nodeIntegration: true
+		}
+	});
 
-  mainWindow.loadURL(
-    url.format({
-      pathname: path.join(__dirname, "index.html"),
-      protocol: "file:",
-      slashes: true
-    })
-  );
+	mainWindow.loadURL(
+		url.format({
+			pathname: path.join(__dirname, "index.html"),
+			protocol: "file:",
+			slashes: true
+		})
+	);
 
-  // DevTools.
-  // mainWindow.webContents.openDevTools()
+	// DevTools.
+	// mainWindow.webContents.openDevTools()
 
-  mainWindow.on("closed", function() {
-    mainWindow = null;
-  });
+	mainWindow.on("closed", function() {
+		mainWindow = null;
+	});
 }
 
 app.on("ready", createWindow);
 
 // Quit when all windows are closed.
 app.on("window-all-closed", function() {
-  // On macOS quits explicitly with Cmd + Q
-  if (process.platform !== "darwin") app.quit();
+	// On macOS quits explicitly with Cmd + Q
+	if (process.platform !== "darwin") app.quit();
 });
 
 app.on("activate", function() {
-  // On macOS it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) createWindow();
+	// On macOS it's common to re-create a window in the app when the
+	// dock icon is clicked and there are no other windows open.
+	if (mainWindow === null) createWindow();
 });
 
 // ================================================================================================
 //                                        WINDOW OPERATIONS
 // ------------------------------------------------------------------------------------------------
 ipcMain.on("minimizeWindow", (event, value) => {
-  mainWindow.minimize();
+	mainWindow.minimize();
 });
 
 ipcMain.on("maximizeWindow", (event, value) => {
-  mainWindow.maximize();
+	mainWindow.maximize();
 });
 
 ipcMain.on("unmaximizeWindow", (event, value) => {
-  mainWindow.unmaximize();
+	mainWindow.unmaximize();
 });
 
 ipcMain.on("closeWindow", (event, value) => {
-  dbConnection.disconnect(alphaData, setFileChangedVal);
-  if (process.platform !== "darwin") app.quit();
+	dbConnection.disconnect(alphaData, setFileChangedVal);
+	if (process.platform !== "darwin") app.quit();
 
-  require("./services/stupidConsoleMessages").exitMessage();
+	require("./services/stupidConsoleMessages").exitMessage();
 });
 
 var provider = null;
 ipcMain.on("googleSignUp", (event, value) => {
-  console.log("NewUserRequest!");
-  signUpChildWindow = new BrowserWindow({
-    parent: mainWindow,
-    modal: true,
-    show: false
-  });
-  signUpChildWindow.loadURL(
-    url.format({
-      pathname: path.join(__dirname, "auth.html"),
-      protocol: "file:",
-      slashes: true
-    })
-  );
-  signUpChildWindow.on("ready-to-show", () => {
-    signUpChildWindow.show();
-  });
+	console.log("NewUserRequest!");
+	signUpChildWindow = new BrowserWindow({
+		parent: mainWindow,
+		modal: true,
+		show: false
+	});
+	signUpChildWindow.loadURL(
+		url.format({
+			pathname: path.join(__dirname, "auth.html"),
+			protocol: "file:",
+			slashes: true
+		})
+	);
+	signUpChildWindow.on("ready-to-show", () => {
+		signUpChildWindow.show();
+	});
 });
 // ---------------------------XXX------------------------------
 
@@ -142,12 +142,12 @@ var fileChanged = false;
 
 // set AlphaData-------------------
 function setAlphaData(data) {
-  alphaData = data;
+	alphaData = data;
 }
 
 // set FileChanged-----------------
 function setFileChangedVal(fileChangedVal) {
-  fileChanged = fileChangedVal;
+	fileChanged = fileChangedVal;
 }
 
 // Extracting alphaData from fileSystem----------
@@ -155,7 +155,7 @@ dbConnection.connect(setAlphaData);
 
 // Change Checker----------------
 setInterval(() => {
-  dbConnection.checkForChanges(fileChanged, alphaData, setFileChangedVal);
+	dbConnection.checkForChanges(fileChanged, alphaData, setFileChangedVal);
 }, 10000);
 
 //
@@ -217,49 +217,43 @@ const taskListAPI = require("./services/tasks/taskListAPI");
 
 //------------Get Tasks List Request----------------
 ipcMain.on("allDailiesTasks", (event, type) => {
-  taskListAPI.updateTasks(alphaData, 0, mainWindow);
+	taskListAPI.updateTasks(alphaData, 0, mainWindow);
 });
 
 ipcMain.on("allKanbanTasks", (event, type) => {
-  taskListAPI.updateTasks(alphaData, 1, mainWindow);
+	taskListAPI.updateTasks(alphaData, 1, mainWindow);
 });
 
 //----------------New Task Request-------------------
 ipcMain.on("newTaskCard", (event, value) => {
-  taskListAPI.newTaskCard(alphaData, value, setAlphaData);
-  taskListAPI.updateTasks(alphaData, value.taskType, mainWindow);
+	taskListAPI.newTaskCard(alphaData, value, setAlphaData);
+	taskListAPI.updateTasks(alphaData, value.taskType, mainWindow);
 
-  setFileChangedVal(true);
+	setFileChangedVal(true);
 });
 
 // ----------------Remove Task Request-----------------
 ipcMain.on("removeTaskCard", (event, value) => {
-  var updatedListType = taskListAPI.removeTaskCard(
-    alphaData,
-    value,
-    setAlphaData
-  );
+	var updatedListType = taskListAPI.removeTaskCard(alphaData, value, setAlphaData);
 
-  taskListAPI.updateTasks(alphaData, updatedListType, mainWindow);
+	taskListAPI.updateTasks(alphaData, updatedListType, mainWindow);
 
-  setFileChangedVal(true);
+	setFileChangedVal(true);
 });
 
 //------------To reorder Multilist----------------------------
 ipcMain.on("setNewTaskCardOrder", (event, value) => {
-  console.log("Sort Request");
+	console.log("Sort Request");
 
-  const taskType = value.taskType;
-  const result = value.result;
+	const taskType = value.taskType;
+	const result = value.result;
 
-  if (taskType == 0)
-    taskListAPI.reorderDailiesList(alphaData, result, setAlphaData);
-  if (taskType == 1)
-    taskListAPI.reorderKanbanList(alphaData, result, setAlphaData);
+	if (taskType == 0) taskListAPI.reorderDailiesList(alphaData, result, setAlphaData);
+	if (taskType == 1) taskListAPI.reorderKanbanList(alphaData, result, setAlphaData);
 
-  taskListAPI.updateTasks(alphaData, value.taskType, mainWindow);
+	taskListAPI.updateTasks(alphaData, value.taskType, mainWindow);
 
-  setFileChangedVal(true);
+	setFileChangedVal(true);
 });
 
 //===============================================================================
@@ -268,82 +262,271 @@ ipcMain.on("setNewTaskCardOrder", (event, value) => {
 const taskProgressAPI = require("./services/tasks/taskProgressAPI");
 
 ipcMain.on("allTaskProgressScores", (event, type) => {
-  taskProgressAPI.updateTasks(alphaData, 0, mainWindow);
+	taskProgressAPI.updateTasks(alphaData, 0, mainWindow);
 });
 
 //===============================================================================
 //------------------------------------TAGS---------------------------------------
 var tags = [
-  {
-      tagID: 1,
-      tagType: 'time',
-      title: 'When',
-      priority: 1,
-      subTags: [2, 3, 4]
-  },
-  {
-      tagID: 2,
-      tagType: 'time',
-      title: 'Morning',
-      priority: 2,
-      subTags: [6]
-  },
-  {
-      tagID: 3,
-      tagType: 'time',
-      title: 'Evening',
-      priority: 2,
-      subTags: [5, 7, 8]
-  },
-  {
-      tagID: 4,
-      tagType: 'time',
-      title: 'Night',
-      priority: 2,
-      subTags: []
-  },
-  {
-      tagID: 5,
-      tagType: 'time',
-      title: 'Dusk',
-      priority: 3,
-      subTags: []
-  },
-  {
-      tagID: 6,
-      tagType: 'time',
-      title: 'Dawn',
-      priority: 3,
-      subTags: []
-  },
-  {
-      tagID: 7,
-      tagType: 'time',
-      title: '5pm',
-      priority: 3,
-      subTags: []
-  },
-  {
-      tagID: 8,
-      tagType: 'time',
-      title: '6pm',
-      priority: 3,
-      subTags: []
-  },
-  {
-      tagID: 9,
-      tagType: 'where',
-      title: 'Home',
-      priority: 1,
-      subTags: []
-  },
-]
+	{
+		tagID: 1,
+		tagType: "time",
+		title: "When",
+		priority: 1,
+		subTags: [ 2, 3, 4 ]
+	},
+	{
+		tagID: 2,
+		tagType: "time",
+		title: "Morning",
+		priority: 2,
+		subTags: [ 6 ]
+	},
+	{
+		tagID: 3,
+		tagType: "time",
+		title: "Evening",
+		priority: 2,
+		subTags: [ 5, 7, 8 ]
+	},
+	{
+		tagID: 4,
+		tagType: "time",
+		title: "Night",
+		priority: 2,
+		subTags: []
+	},
+	{
+		tagID: 5,
+		tagType: "time",
+		title: "Dusk",
+		priority: 3,
+		subTags: []
+	},
+	{
+		tagID: 6,
+		tagType: "time",
+		title: "Dawn",
+		priority: 3,
+		subTags: []
+	},
+	{
+		tagID: 7,
+		tagType: "time",
+		title: "5pm",
+		priority: 3,
+		subTags: []
+	},
+	{
+		tagID: 8,
+		tagType: "time",
+		title: "6pm",
+		priority: 3,
+		subTags: []
+	},
+	{
+		tagID: 9,
+		tagType: "where",
+		title: "Home",
+		priority: 1,
+		subTags: []
+	},
+	{
+		tagID: 1,
+		tagType: "time",
+		title: "When",
+		priority: 1,
+		subTags: [ 2, 3, 4 ]
+	},
+	{
+		tagID: 2,
+		tagType: "time",
+		title: "Morning",
+		priority: 2,
+		subTags: [ 6 ]
+	},
+	{
+		tagID: 3,
+		tagType: "time",
+		title: "Evening",
+		priority: 2,
+		subTags: [ 5, 7, 8 ]
+	},
+	{
+		tagID: 4,
+		tagType: "time",
+		title: "Night",
+		priority: 2,
+		subTags: []
+	},
+	{
+		tagID: 5,
+		tagType: "time",
+		title: "Dusk",
+		priority: 3,
+		subTags: []
+	},
+	{
+		tagID: 6,
+		tagType: "time",
+		title: "Dawn",
+		priority: 3,
+		subTags: []
+	},
+	{
+		tagID: 7,
+		tagType: "time",
+		title: "5pm",
+		priority: 3,
+		subTags: []
+	},
+	{
+		tagID: 8,
+		tagType: "time",
+		title: "6pm",
+		priority: 3,
+		subTags: []
+	},
+	{
+		tagID: 9,
+		tagType: "where",
+		title: "Home",
+		priority: 1,
+		subTags: []
+	},
+	{
+		tagID: 10,
+		tagType: "time",
+		title: "When",
+		priority: 1,
+		subTags: [ 11, 12, 13 ]
+	},
+	{
+		tagID: 11,
+		tagType: "time",
+		title: "Morning",
+		priority: 2,
+		subTags: [ 15 ]
+	},
+	{
+		tagID: 12,
+		tagType: "time",
+		title: "Evening",
+		priority: 2,
+		subTags: [ 14, 16, 17 ]
+	},
+	{
+		tagID: 13,
+		tagType: "time",
+		title: "Night",
+		priority: 2,
+		subTags: []
+	},
+	{
+		tagID: 14,
+		tagType: "time",
+		title: "Dusk",
+		priority: 3,
+		subTags: []
+	},
+	{
+		tagID: 15,
+		tagType: "time",
+		title: "Dawn",
+		priority: 3,
+		subTags: []
+	},
+	{
+		tagID: 16,
+		tagType: "time",
+		title: "5pm",
+		priority: 3,
+		subTags: []
+	},
+	{
+		tagID: 17,
+		tagType: "time",
+		title: "6pm",
+		priority: 3,
+		subTags: []
+	},
+	{
+		tagID: 18,
+		tagType: "where",
+		title: "Home",
+		priority: 1,
+		subTags: []
+	},
+	{
+		tagID: 19,
+		tagType: "time",
+		title: "When",
+		priority: 1,
+		subTags: [ 20, 21, 22 ]
+	},
+	{
+		tagID: 20,
+		tagType: "time",
+		title: "Morning",
+		priority: 2,
+		subTags: [ 24 ]
+	},
+	{
+		tagID: 21,
+		tagType: "time",
+		title: "Evening",
+		priority: 2,
+		subTags: [ 23, 25, 26 ]
+	},
+	{
+		tagID: 22,
+		tagType: "time",
+		title: "Night",
+		priority: 2,
+		subTags: []
+	},
+	{
+		tagID: 23,
+		tagType: "time",
+		title: "Dusk",
+		priority: 3,
+		subTags: []
+	},
+	{
+		tagID: 24,
+		tagType: "time",
+		title: "Dawn",
+		priority: 3,
+		subTags: []
+	},
+	{
+		tagID: 25,
+		tagType: "time",
+		title: "5pm",
+		priority: 3,
+		subTags: []
+	},
+	{
+		tagID: 26,
+		tagType: "time",
+		title: "6pm",
+		priority: 3,
+		subTags: []
+	},
+	{
+		tagID: 27,
+		tagType: "where",
+		title: "Home",
+		priority: 1,
+		subTags: []
+	}
+];
 
-var premiumTags = [1, 9];
+var premiumTags = [ 1, 9, 10, 18, 19, 27 ];
 
-ipcMain.on('getAllTags', (event, val) => {
-  mainWindow.webContents.send('allTags', {
-    tags: tags,
-    premiumTags: premiumTags
-  })
-})
+ipcMain.on("getAllTags", (event, val) => {
+	mainWindow.webContents.send("allTags", {
+		tags: tags,
+		premiumTags: premiumTags
+	});
+});
