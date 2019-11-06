@@ -1,11 +1,16 @@
 import {ipcRenderer, ipcMain} from 'electron';
 
+async function getAllTags() {
+    return new Promise(async resolve => {
+        ipcRenderer.send('getAllTags', true);
+        resolve(true);
+    });
+}
+
 async function newTag(title) {
-    // return new Promise(async(res, err) => {
     ipcRenderer.send('newTag', {
         title: title
     });
-    // })
 }
 
 async function deleteTag(tagID){
@@ -45,6 +50,7 @@ async function changeParentTag(tagID, oldTagID, newTagID){
 
 // Exports---------------------------------------------------------------------
 
+exports.getAllTags = getAllTags;
 exports.newTag = newTag;
 exports.deleteTag = deleteTag;
 exports.addTag = addTag;

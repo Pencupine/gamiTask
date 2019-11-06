@@ -270,3 +270,80 @@ const taskProgressAPI = require("./services/tasks/taskProgressAPI");
 ipcMain.on("allTaskProgressScores", (event, type) => {
   taskProgressAPI.updateTasks(alphaData, 0, mainWindow);
 });
+
+//===============================================================================
+//------------------------------------TAGS---------------------------------------
+var tags = [
+  {
+      tagID: 1,
+      tagType: 'time',
+      title: 'When',
+      priority: 1,
+      subTags: [2, 3, 4]
+  },
+  {
+      tagID: 2,
+      tagType: 'time',
+      title: 'Morning',
+      priority: 2,
+      subTags: [6]
+  },
+  {
+      tagID: 3,
+      tagType: 'time',
+      title: 'Evening',
+      priority: 2,
+      subTags: [5, 7, 8]
+  },
+  {
+      tagID: 4,
+      tagType: 'time',
+      title: 'Night',
+      priority: 2,
+      subTags: []
+  },
+  {
+      tagID: 5,
+      tagType: 'time',
+      title: 'Dusk',
+      priority: 3,
+      subTags: []
+  },
+  {
+      tagID: 6,
+      tagType: 'time',
+      title: 'Dawn',
+      priority: 3,
+      subTags: []
+  },
+  {
+      tagID: 7,
+      tagType: 'time',
+      title: '5pm',
+      priority: 3,
+      subTags: []
+  },
+  {
+      tagID: 8,
+      tagType: 'time',
+      title: '6pm',
+      priority: 3,
+      subTags: []
+  },
+  {
+      tagID: 9,
+      tagType: 'where',
+      title: 'Home',
+      priority: 1,
+      subTags: []
+  },
+]
+
+var premiumTags = [1, 9];
+
+ipcMain.on('getAllTags', (event, val) => {
+  mainWindow.webContents.send('allTags', {
+    tags: tags,
+    premiumTags: premiumTags
+  })
+})

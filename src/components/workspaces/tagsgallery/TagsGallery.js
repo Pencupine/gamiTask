@@ -1,7 +1,18 @@
 import React, { Component } from "react";
-import TagObj from "../../dataObjects/tags/TagObj";
+import { ipcRenderer } from "electron";
+
+import AllTagsList from "./allTagsList/allTagsList";
+import { getAllTags } from '../../dataObjects/tags/tagsHandler';
 
 export default class TagsGallery extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  async componentWillMount(){
+    if(await getAllTags()) console.log('Wowo');
+  }
+
   render() {
     return (
       <div
@@ -54,26 +65,7 @@ export default class TagsGallery extends Component {
                 padding: "5px"
               }}
             >
-              <TagObj
-                title={"Today"}
-                tagStyle={
-                  {
-                    active: true,
-                    round: true,
-                    intent: "none",
-                    interactive: true,
-                    minimal: false
-                  }
-                }
-                actions={
-                  {
-                    onclick: ()=>{
-                        console.log("TagClick");
-                    }
-                  }
-                }
-              >
-              </TagObj>
+              <AllTagsList />
             </div>
             <div
               style={{
