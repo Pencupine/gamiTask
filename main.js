@@ -1,19 +1,19 @@
 // Modules to control application life
-const { app, BrowserWindow, ipcMain } = require("electron");
-const url = require("url");
-const path = require("path");
-const isDev = require("electron-is-dev");
+const { app, BrowserWindow, ipcMain, BrowserView } = require('electron');
+const url = require('url');
+const path = require('path');
+const isDev = require('electron-is-dev');
 
-const dbConnection = require("./services/dbConnection");
+const dbConnection = require('./services/dbConnection');
 
 // --------For easy reloading in dev environment--------------------
 if (isDev) {
-  require("electron-reload")(__dirname, __dirname, {
-    electron: require(`${__dirname}/../node_modules/electron`)
-  });
-  console.log(
-    "Ignore this message... There is some problem with the electron-reload module. Please reload the 'electron .' manually!!!"
-  );
+	require('electron-reload')(__dirname, __dirname, {
+		electron: require(`${__dirname}/../node_modules/electron`)
+	});
+	console.log(
+		"Ignore this message... There is some problem with the electron-reload module. Please reload the 'electron .' manually!!!"
+	);
 }
 //------------------------XXXX--------------------------------------
 //
@@ -22,7 +22,7 @@ if (isDev) {
 //
 //
 // Entry Message
-require("./services/stupidConsoleMessages").entryMessage();
+require('./services/stupidConsoleMessages').entryMessage();
 //
 //
 // ================================================================================================
@@ -30,93 +30,136 @@ require("./services/stupidConsoleMessages").entryMessage();
 // ------------------------------------------------------------------------------------------------
 
 let mainWindow = null;
-let signUpChildWindow = null;
-
 function createWindow() {
-  mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 900,
-    useContentSize: true,
-    autoHideMenuBar: true,
-    resizable: true,
-    minimizable: true,
-    maximizable: true,
-    frame: false,
-    webPreferences: {
-      nodeIntegration: true
-    }
-  });
+	mainWindow = new BrowserWindow({
+		width: 1200,
+		height: 900,
+		useContentSize: true,
+		autoHideMenuBar: true,
+		resizable: true,
+		minimizable: true,
+		maximizable: true,
+		frame: false,
+		webPreferences: {
+			nodeIntegration: true
+		}
+	});
 
-  mainWindow.loadURL(
-    url.format({
-      pathname: path.join(__dirname, "index.html"),
-      protocol: "file:",
-      slashes: true
-    })
-  );
+	mainWindow.loadURL(
+		url.format({
+			pathname: path.join(__dirname, 'index.html'),
+			protocol: 'file:',
+			slashes: true
+		})
+	);
 
-  // DevTools.
-  // mainWindow.webContents.openDevTools()
+	// DevTools.
+	// mainWindow.webContents.openDevTools()
 
-  mainWindow.on("closed", function() {
-    mainWindow = null;
-  });
+	mainWindow.on('closed', function() {
+		mainWindow = null;
+	});
 }
 
-app.on("ready", createWindow);
+app.on('ready', createWindow);
 
 // Quit when all windows are closed.
-app.on("window-all-closed", function() {
-  // On macOS quits explicitly with Cmd + Q
-  if (process.platform !== "darwin") app.quit();
+app.on('window-all-closed', function() {
+	// On macOS quits explicitly with Cmd + Q
+	if (process.platform !== 'darwin') app.quit();
 });
 
-app.on("activate", function() {
-  // On macOS it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) createWindow();
+app.on('activate', function() {
+	// On macOS it's common to re-create a window in the app when the
+	// dock icon is clicked and there are no other windows open.
+	if (mainWindow === null) createWindow();
 });
 
 // ================================================================================================
 //                                        WINDOW OPERATIONS
 // ------------------------------------------------------------------------------------------------
-ipcMain.on("minimizeWindow", (event, value) => {
-  mainWindow.minimize();
+ipcMain.on('minimizeWindow', (event, value) => {
+	mainWindow.minimize();
 });
 
-ipcMain.on("maximizeWindow", (event, value) => {
-  mainWindow.maximize();
+ipcMain.on('maximizeWindow', (event, value) => {
+	mainWindow.maximize();
 });
 
-ipcMain.on("unmaximizeWindow", (event, value) => {
-  mainWindow.unmaximize();
+ipcMain.on('unmaximizeWindow', (event, value) => {
+	mainWindow.unmaximize();
 });
 
-ipcMain.on("closeWindow", (event, value) => {
-  dbConnection.disconnect(alphaData, setFileChangedVal);
-  if (process.platform !== "darwin") app.quit();
+ipcMain.on('closeWindow', (event, value) => {
+	dbConnection.disconnect(alphaData, setFileChangedVal);
+	if (process.platform !== 'darwin') app.quit();
 
-  require("./services/stupidConsoleMessages").exitMessage();
+	require('./services/stupidConsoleMessages').exitMessage();
 });
 
-var provider = null;
-ipcMain.on("googleSignUp", (event, value) => {
-  console.log("NewUserRequest!");
-  signUpChildWindow = new BrowserWindow({
-    parent: mainWindow,
-    modal: true,
-    show: false
-  });
-  signUpChildWindow.loadURL(
-    url.format({
-      pathname: path.join(__dirname, "auth.html"),
-      protocol: "file:",
-      slashes: true
-    })
-  );
-  signUpChildWindow.on("ready-to-show", () => {
-    signUpChildWindow.show();
-  });
+// ================================================================================================
+//                                         FIREBASE OPERATIONS
+// ------------------------------------------------------------------------------------------------
+
+// var provider = null;
+// ipcMain.on('googleSignUp', (event, value) => {
+// 	console.log('NewUserRequest!');
+// 	signUpChildWindow = new BrowserWindow({
+// 		parent: mainWindow,
+// 		modal: true,
+// 		show: false
+// 	});
+// 	signUpChildWindow.loadURL(
+// 		url.format({
+// 			pathname: path.join(__dirname, 'auth.html'),
+// 			protocol: 'file:',
+// 			slashes: true
+// 		})
+// 	);
+// 	signUpChildWindow.on('ready-to-show', () => {
+// 		signUpChildWindow.show();
+// 	});
+// });
+let signUpChildWindow = null;
+
+// var firebase = require('firebase');
+// var firebaseui = require('firebaseui');
+
+ipcMain.on('openSignUp', (event, value) => {
+	console.log('Opening Browser');
+	signUpChildWindow = new BrowserWindow({
+		parent: mainWindow,
+		modal: true,
+		show: false,
+		webPreferences: {
+			nodeIntegration: true,
+			webviewTag: true
+		}
+	});
+	console.log('BrowserWindow Generated');
+
+	signUpChildWindow.loadURL(
+		url.format({
+			pathname: path.join(__dirname, 'auth.html'),
+			protocol: 'file:',
+			slashes: true
+		})
+	);
+
+	// let view = new BrowserView();
+	// signUpChildWindow.setBrowserView(view);
+	// view.setBounds({ x: 0, y: 0, width: 600, height: 600 });
+	// view.webContents.loadURL('https://electronjs.org');
+	// signUpChildWindow.loadURL('http://www.google.com');
+
+	signUpChildWindow.on('ready-to-show', () => {
+		console.log('readyToSHow');
+		signUpChildWindow.show();
+	});
+
+	signUpChildWindow.on('closed', function() {
+		signUpChildWindow = null;
+	});
 });
 // ---------------------------XXX------------------------------
 
@@ -142,12 +185,12 @@ var fileChanged = false;
 
 // set AlphaData-------------------
 function setAlphaData(data) {
-  alphaData = data;
+	alphaData = data;
 }
 
 // set FileChanged-----------------
 function setFileChangedVal(fileChangedVal) {
-  fileChanged = fileChangedVal;
+	fileChanged = fileChangedVal;
 }
 
 // Extracting alphaData from fileSystem----------
@@ -155,7 +198,7 @@ dbConnection.connect(setAlphaData);
 
 // Change Checker----------------
 setInterval(() => {
-  dbConnection.checkForChanges(fileChanged, alphaData, setFileChangedVal);
+	dbConnection.checkForChanges(fileChanged, alphaData, setFileChangedVal);
 }, 10000);
 
 //
@@ -213,60 +256,54 @@ setInterval(() => {
 //===========================================================================================
 //------------------------------------------TASKS--------------------------------------------
 
-const taskListAPI = require("./services/tasks/taskListAPI");
+const taskListAPI = require('./services/tasks/taskListAPI');
 
 //------------Get Tasks List Request----------------
-ipcMain.on("allDailiesTasks", (event, type) => {
-  taskListAPI.updateTasks(alphaData, 0, mainWindow);
+ipcMain.on('allDailiesTasks', (event, type) => {
+	taskListAPI.updateTasks(alphaData, 0, mainWindow);
 });
 
-ipcMain.on("allKanbanTasks", (event, type) => {
-  taskListAPI.updateTasks(alphaData, 1, mainWindow);
+ipcMain.on('allKanbanTasks', (event, type) => {
+	taskListAPI.updateTasks(alphaData, 1, mainWindow);
 });
 
 //----------------New Task Request-------------------
-ipcMain.on("newTaskCard", (event, value) => {
-  taskListAPI.newTaskCard(alphaData, value, setAlphaData);
-  taskListAPI.updateTasks(alphaData, value.taskType, mainWindow);
+ipcMain.on('newTaskCard', (event, value) => {
+	taskListAPI.newTaskCard(alphaData, value, setAlphaData);
+	taskListAPI.updateTasks(alphaData, value.taskType, mainWindow);
 
-  setFileChangedVal(true);
+	setFileChangedVal(true);
 });
 
 // ----------------Remove Task Request-----------------
-ipcMain.on("removeTaskCard", (event, value) => {
-  var updatedListType = taskListAPI.removeTaskCard(
-    alphaData,
-    value,
-    setAlphaData
-  );
+ipcMain.on('removeTaskCard', (event, value) => {
+	var updatedListType = taskListAPI.removeTaskCard(alphaData, value, setAlphaData);
 
-  taskListAPI.updateTasks(alphaData, updatedListType, mainWindow);
+	taskListAPI.updateTasks(alphaData, updatedListType, mainWindow);
 
-  setFileChangedVal(true);
+	setFileChangedVal(true);
 });
 
 //------------To reorder Multilist----------------------------
-ipcMain.on("setNewTaskCardOrder", (event, value) => {
-  console.log("Sort Request");
+ipcMain.on('setNewTaskCardOrder', (event, value) => {
+	console.log('Sort Request');
 
-  const taskType = value.taskType;
-  const result = value.result;
+	const taskType = value.taskType;
+	const result = value.result;
 
-  if (taskType == 0)
-    taskListAPI.reorderDailiesList(alphaData, result, setAlphaData);
-  if (taskType == 1)
-    taskListAPI.reorderKanbanList(alphaData, result, setAlphaData);
+	if (taskType == 0) taskListAPI.reorderDailiesList(alphaData, result, setAlphaData);
+	if (taskType == 1) taskListAPI.reorderKanbanList(alphaData, result, setAlphaData);
 
-  taskListAPI.updateTasks(alphaData, value.taskType, mainWindow);
+	taskListAPI.updateTasks(alphaData, value.taskType, mainWindow);
 
-  setFileChangedVal(true);
+	setFileChangedVal(true);
 });
 
 //===============================================================================
 //--------------------------------TASKS SCORES-----------------------------------
 
-const taskProgressAPI = require("./services/tasks/taskProgressAPI");
+const taskProgressAPI = require('./services/tasks/taskProgressAPI');
 
-ipcMain.on("allTaskProgressScores", (event, type) => {
-  taskProgressAPI.updateTasks(alphaData, 0, mainWindow);
+ipcMain.on('allTaskProgressScores', (event, type) => {
+	taskProgressAPI.updateTasks(alphaData, 0, mainWindow);
 });
