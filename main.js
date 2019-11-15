@@ -100,26 +100,6 @@ ipcMain.on('closeWindow', (event, value) => {
 // ================================================================================================
 //                                         FIREBASE OPERATIONS
 // ------------------------------------------------------------------------------------------------
-
-// var provider = null;
-// ipcMain.on('googleSignUp', (event, value) => {
-// 	console.log('NewUserRequest!');
-// 	signUpChildWindow = new BrowserWindow({
-// 		parent: mainWindow,
-// 		modal: true,
-// 		show: false
-// 	});
-// 	signUpChildWindow.loadURL(
-// 		url.format({
-// 			pathname: path.join(__dirname, 'auth.html'),
-// 			protocol: 'file:',
-// 			slashes: true
-// 		})
-// 	);
-// 	signUpChildWindow.on('ready-to-show', () => {
-// 		signUpChildWindow.show();
-// 	});
-// });
 let signUpChildWindow = null;
 
 // var firebase = require('firebase');
@@ -129,6 +109,8 @@ ipcMain.on('openSignUp', (event, value) => {
 	console.log('Opening Browser');
 	signUpChildWindow = new BrowserWindow({
 		parent: mainWindow,
+		width: 500,
+		height: 500,
 		modal: true,
 		show: false,
 		webPreferences: {
@@ -140,17 +122,11 @@ ipcMain.on('openSignUp', (event, value) => {
 
 	signUpChildWindow.loadURL(
 		url.format({
-			pathname: path.join(__dirname, 'auth.html'),
+			pathname: path.join(__dirname, 'auth/auth.html'),
 			protocol: 'file:',
 			slashes: true
 		})
 	);
-
-	// let view = new BrowserView();
-	// signUpChildWindow.setBrowserView(view);
-	// view.setBounds({ x: 0, y: 0, width: 600, height: 600 });
-	// view.webContents.loadURL('https://electronjs.org');
-	// signUpChildWindow.loadURL('http://www.google.com');
 
 	signUpChildWindow.on('ready-to-show', () => {
 		console.log('readyToSHow');
