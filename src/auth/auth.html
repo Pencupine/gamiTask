@@ -59,12 +59,7 @@
     var uiConfig = {
       callbacks: {
         signInSuccessWithAuthResult: function(authResult, redirectUrl) {
-          
-          firebase.auth().currentUser.getIdToken(true).then(idToken => {
-            console.log(idToken);
-            tokenManager.saveToken(idToken);
-          });
-          
+
           document.getElementById('loader').innerHTML = "Signed In"
           
           return false;
