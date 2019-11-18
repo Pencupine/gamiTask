@@ -137,6 +137,10 @@ ipcMain.on('openSignUp', (event, value) => {
 		signUpChildWindow = null;
 	});
 });
+
+ipcMain.on('saveToken', (event, value) => {
+	console.log(value);
+});
 // ---------------------------XXX------------------------------
 
 //
