@@ -5,6 +5,7 @@ const path = require('path');
 const isDev = require('electron-is-dev');
 
 const dbConnection = require('./services/dbConnection');
+const auth = require('./services/auth/auth');
 
 // --------For easy reloading in dev environment--------------------
 if (isDev) {
@@ -100,46 +101,16 @@ ipcMain.on('closeWindow', (event, value) => {
 // ================================================================================================
 //                                         FIREBASE OPERATIONS
 // ------------------------------------------------------------------------------------------------
-let signUpChildWindow = null;
-
-// var firebase = require('firebase');
-// var firebaseui = require('firebaseui');
+app.on('ready', auth.startAuthWindow);
 
 ipcMain.on('openSignUp', (event, value) => {
 	console.log('Opening Browser');
-	signUpChildWindow = new BrowserWindow({
-		parent: mainWindow,
-		width: 500,
-		height: 500,
-		modal: true,
-		show: false,
-		webPreferences: {
-			nodeIntegration: true,
-			webviewTag: true
-		}
-	});
-	console.log('BrowserWindow Generated');
-
-	signUpChildWindow.loadURL(
-		url.format({
-			pathname: path.join(__dirname, 'auth/auth.html'),
-			protocol: 'file:',
-			slashes: true
-		})
-	);
-
-	signUpChildWindow.on('ready-to-show', () => {
-		console.log('readyToSHow');
-		signUpChildWindow.show();
-	});
-
-	signUpChildWindow.on('closed', function() {
-		signUpChildWindow = null;
-	});
+	auth.startAuthWindow(mainWindow);
 });
 
 ipcMain.on('saveToken', (event, value) => {
 	console.log(value);
+	auth.saveToken(value);
 });
 // ---------------------------XXX------------------------------
 

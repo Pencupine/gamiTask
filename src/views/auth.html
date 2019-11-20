@@ -7,49 +7,61 @@
   <title>Document</title>
   <style>
   </style>
+  <!-- Firebase CDN -->
   <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
   <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
   <script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-auth.js"></script>
-  <!-- BluePRintJS -->
-  <link href="path/to/node_modules/@blueprintjs/core/lib/css/blueprint.css" rel="stylesheet" />
-  <link href="path/to/node_modules/@blueprintjs/icons/lib/css/blueprint-icons.css" rel="stylesheet" />
+  
+  <!-- BootStrap CDN-->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
 <body>
-  <div id="firebaseui-auth-container"></div>
-  <div id="loader">Loading...</div> 
-  <div id="authCheck">Wait</div>
-  <!-- <div id="spinner"> -->
-  </div>
+  <!-- <div class="container h-100 text-center"> -->
+    <div id="firebaseui-auth-container"></div>
+    <div id="loader" class="row mx-auto text-center h-100">
+      <div class="col-12 auto align-item-center h-100">
+        <div class="spinner-grow text-secondary" style="width: 3rem; height: 3rem;"></div>
+      </div>
+    </div>
+  <!-- </div> -->
 
-  </div>
   <script>
+
     const electron = require('electron');
 
-    var firebaseConfig = {
-      apiKey: "AIzaSyBkB36J6iOzka1gZhlR9Ye_smCR0f5s1h8",
-      authDomain: "testbrowserview.firebaseapp.com",
-      databaseURL: "https://testbrowserview.firebaseio.com",
-      projectId: "testbrowserview",
-      storageBucket: "testbrowserview.appspot.com",
-      messagingSenderId: "206998722994",
-      appId: "1:206998722994:web:b33e295a948ef906ec6cab"
-    };
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
+    setLoadingScreen();
+
+    // Loading Screen function
+    function setLoadingScreen(){
+      document.getElementById('firebaseui-auth-container').style.display = 'none';
+      document.getElementById('loader').style.display = "inline";
+    }
+
+    // Show Firebase UI
+
+    firebase.initializeApp(require('../config').firebaseUI_config);
 
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
-        console.log(firebase.auth().currentUser);
         firebase.auth().currentUser.getIdToken(true).then(idToken => {
           electron.ipcRenderer.send('saveToken', idToken);
-          // firebase.auth().signout();
         });
-        document.getElementById('authCheck').style.display = 'none';
-        document.getElementById('firebaseui-auth-container').style.display = 'none';
+        
       } else {
-        document.getElementById('authCheck').style.display = 'inline';
+
       }
+    })
+
+    electron.ipcRenderer.on('signOut', (event, value) => {
+      console.log('signinOut');
+      firebase.auth().signOut().then(() => {
+        console.log('signed out user');
+      })
+      document.getElementById('firebaseui-auth-container').style.display = 'inline';
     })
     
     var ui = new firebaseui.auth.AuthUI(firebase.auth());
@@ -57,15 +69,11 @@
     var uiConfig = {
       callbacks: {
         signInSuccessWithAuthResult: function(authResult, redirectUrl) {
-
           document.getElementById('loader').innerHTML = "Signed In"
-          
           return false;
-          
         },
         uiShown: function() {
-          
-          document.getElementById('loader').style.display = 'none';
+          // document.getElementById('loader').style.display = 'none';
         }
       },
       signInFlow: 'redirect',
