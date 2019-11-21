@@ -101,11 +101,10 @@ ipcMain.on('closeWindow', (event, value) => {
 // ================================================================================================
 //                                         FIREBASE OPERATIONS
 // ------------------------------------------------------------------------------------------------
-app.on('ready', () => {
-	console.log('APP IS READY. CHECKING AUTH.');
-	auth.checkAuthState(mainWindow);
-});
-
+// app.on('ready', () => {
+// 	console.log('APP IS READY. CHECKING AUTH.');
+// 	auth.checkAuthState(mainWindow);
+// });
 auth.removeToken('idToken');
 
 ipcMain.on('openSignUp', (event, value) => {
@@ -115,9 +114,29 @@ ipcMain.on('openSignUp', (event, value) => {
 
 ipcMain.on('signInUser', (event, value) => {
 	auth.removeToken('idToken');
-	console.log('IPC MAIN : ', value);
+	console.log('SENDING USER SIGN IN REQUEST THROUGH IPC MAIN');
 	auth.signInUser(value, mainWindow);
 });
+
+// app.on('ready', () => {
+// 	console.log('APP IS READY. CHECKING AUTH.');
+// 	auth.checkAuthState(mainWindow, redirectToHome);
+// });
+
+// ipcMain.on('openSignUp', (event, value) => {
+// 	console.log('Opening Browser');
+// 	auth.startAuthWindow(mainWindow);
+// });
+
+// ipcMain.on('signInUser', (event, value) => {
+// 	auth.signOutUser();
+// 	console.log('\nSENDING USER SIGN IN REQUEST THROUGH IPC MAIN');
+// 	auth.signInUser(value, mainWindow, redirectToHome);
+// });
+
+// function redirectToHome() {
+// 	mainWindow.webContents.send('redirectToHome', null);
+// }
 // ---------------------------XXX------------------------------
 
 //

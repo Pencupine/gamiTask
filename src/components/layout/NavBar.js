@@ -59,6 +59,9 @@ class NavBar extends Component {
 		ipcRenderer.send('closeWindow', val);
 	}
 	render() {
+		ipcRenderer.on('redirectToHome', (event, value) => {
+			console.log('Redirecting to home');
+		});
 		return (
 			<div className="navBar fixedToTop dragable">
 				<nav className="bp3-navbar bp3-dark .modifier">

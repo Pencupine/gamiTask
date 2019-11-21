@@ -27,6 +27,11 @@
         <div class="spinner-grow text-secondary" style="width: 3rem; height: 3rem;"></div>
       </div>
     </div>
+    <div id="signingin" class="row mx-auto text-center h-100">
+      <div class="col-12 auto align-item-center h-100">
+        <div class="spinner-border text-secondary" style="width: 3rem; height: 3rem;"></div>
+      </div>
+    </div>
   <!-- </div> -->
 
   <script>
@@ -40,25 +45,37 @@
     function setLoadingScreen(){
       document.getElementById('firebaseui-auth-container').style.display = 'none';
       document.getElementById('loader').style.display = "inline";
+      document.getElementById('signingin').style.display = "none";
     }
 
     // Show Firebase UI
     function showFirebaseUI(){
       document.getElementById('firebaseui-auth-container').style.display = 'inline';
       document.getElementById('loader').style.display = "none";
+      document.getElementById('signingin').style.display = "none";
+    }
+
+    // Show Signingin Page
+    function showSigningIn(){
+      document.getElementById('firebaseui-auth-container').style.display = 'none';
+      document.getElementById('loader').style.display = "none";
+      document.getElementById('loader').style.display = "inline";
     }
 
     // Firebase Auth----------------------------------------
     firebase.initializeApp(require('../config').firebaseUI_config);
 
-    // firebase.auth().signOut().then(() => {
-    //     console.log('signed out user');
-    //   });
+    // ipcRenderer.on('signOutUser', (event, value) => {
+      firebase.auth().signOut().then(() => {
+          console.log('signed out user');
+        });
+    // })
 
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
         firebase.auth().currentUser.getIdToken(false).then(idToken => {
           console.log(idToken);
+          showSigningIn();
           electron.ipcRenderer.send('signInUser', idToken);
         });
       } else {
@@ -101,7 +118,6 @@
       };
       
       ui.start('#firebaseui-auth-container', uiConfig);
-    // ui.start('#firebaseui-auth-container', uiConfig);
 
   </script>
 </body>
