@@ -101,16 +101,22 @@ ipcMain.on('closeWindow', (event, value) => {
 // ================================================================================================
 //                                         FIREBASE OPERATIONS
 // ------------------------------------------------------------------------------------------------
-app.on('ready', auth.startAuthWindow);
+app.on('ready', () => {
+	console.log('APP IS READY. CHECKING AUTH.');
+	auth.checkAuthState(mainWindow);
+});
+
+auth.removeToken('idToken');
 
 ipcMain.on('openSignUp', (event, value) => {
 	console.log('Opening Browser');
 	auth.startAuthWindow(mainWindow);
 });
 
-ipcMain.on('saveToken', (event, value) => {
-	console.log(value);
-	auth.saveToken(value);
+ipcMain.on('signInUser', (event, value) => {
+	auth.removeToken('idToken');
+	console.log('IPC MAIN : ', value);
+	auth.signInUser(value, mainWindow);
 });
 // ---------------------------XXX------------------------------
 
