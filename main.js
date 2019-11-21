@@ -5,6 +5,7 @@ const path = require('path');
 const isDev = require('electron-is-dev');
 
 const dbConnection = require('./services/dbConnection');
+const auth = require('./services/auth/auth');
 
 // --------For easy reloading in dev environment--------------------
 if (isDev) {
@@ -100,67 +101,42 @@ ipcMain.on('closeWindow', (event, value) => {
 // ================================================================================================
 //                                         FIREBASE OPERATIONS
 // ------------------------------------------------------------------------------------------------
-
-// var provider = null;
-// ipcMain.on('googleSignUp', (event, value) => {
-// 	console.log('NewUserRequest!');
-// 	signUpChildWindow = new BrowserWindow({
-// 		parent: mainWindow,
-// 		modal: true,
-// 		show: false
-// 	});
-// 	signUpChildWindow.loadURL(
-// 		url.format({
-// 			pathname: path.join(__dirname, 'auth.html'),
-// 			protocol: 'file:',
-// 			slashes: true
-// 		})
-// 	);
-// 	signUpChildWindow.on('ready-to-show', () => {
-// 		signUpChildWindow.show();
-// 	});
+// app.on('ready', () => {
+// 	console.log('APP IS READY. CHECKING AUTH.');
+// 	auth.checkAuthState(mainWindow);
 // });
-let signUpChildWindow = null;
-
-// var firebase = require('firebase');
-// var firebaseui = require('firebaseui');
+auth.removeToken('idToken');
 
 ipcMain.on('openSignUp', (event, value) => {
 	console.log('Opening Browser');
-	signUpChildWindow = new BrowserWindow({
-		parent: mainWindow,
-		modal: true,
-		show: false,
-		webPreferences: {
-			nodeIntegration: true,
-			webviewTag: true
-		}
-	});
-	console.log('BrowserWindow Generated');
-
-	signUpChildWindow.loadURL(
-		url.format({
-			pathname: path.join(__dirname, 'auth.html'),
-			protocol: 'file:',
-			slashes: true
-		})
-	);
-
-	// let view = new BrowserView();
-	// signUpChildWindow.setBrowserView(view);
-	// view.setBounds({ x: 0, y: 0, width: 600, height: 600 });
-	// view.webContents.loadURL('https://electronjs.org');
-	// signUpChildWindow.loadURL('http://www.google.com');
-
-	signUpChildWindow.on('ready-to-show', () => {
-		console.log('readyToSHow');
-		signUpChildWindow.show();
-	});
-
-	signUpChildWindow.on('closed', function() {
-		signUpChildWindow = null;
-	});
+	auth.startAuthWindow(mainWindow);
 });
+
+ipcMain.on('signInUser', (event, value) => {
+	auth.removeToken('idToken');
+	console.log('SENDING USER SIGN IN REQUEST THROUGH IPC MAIN');
+	auth.signInUser(value, mainWindow);
+});
+
+// app.on('ready', () => {
+// 	console.log('APP IS READY. CHECKING AUTH.');
+// 	auth.checkAuthState(mainWindow, redirectToHome);
+// });
+
+// ipcMain.on('openSignUp', (event, value) => {
+// 	console.log('Opening Browser');
+// 	auth.startAuthWindow(mainWindow);
+// });
+
+// ipcMain.on('signInUser', (event, value) => {
+// 	auth.signOutUser();
+// 	console.log('\nSENDING USER SIGN IN REQUEST THROUGH IPC MAIN');
+// 	auth.signInUser(value, mainWindow, redirectToHome);
+// });
+
+// function redirectToHome() {
+// 	mainWindow.webContents.send('redirectToHome', null);
+// }
 // ---------------------------XXX------------------------------
 
 //
