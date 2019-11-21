@@ -217,7 +217,7 @@ class NavBar extends Component {
 								</button>
 							</Link>
 						</Tooltip>
-						<button className="bp3-button bp3-minimal non-dragable">
+						<button className="bp3-button bp3-minimal non-dragable" onClick={()=>{ipcRenderer.send('signOutFromNav', null); console.log("Sign Out")}}>
 							<Icon icon="user" />
 						</button>
 						<span className="bp3-navbar-divider" />
@@ -225,11 +225,12 @@ class NavBar extends Component {
 							<Icon icon="minus" />
 						</button>
 						{this.state.fullscreen ? (
-							<button className="bp3-button bp3-minimal non-dragable" onClick={this.unmaximizeWindow}>
+							// <button className="bp3-button bp3-minimal non-dragable" onClick={this.unmaximizeWindow}>
+							<button className="bp3-button bp3-minimal non-dragable" onClick={this.maxmizeWindow}>
 								<Icon icon="applications" />
 							</button>
 						) : (
-							<button className="bp3-button bp3-minimal non-dragable" onClick={this.maximizeWindow}>
+							<button className="bp3-button bp3-minimal non-dragable" onClick={this.unmaximizeWindow}>
 								<Icon icon="application" />
 							</button>
 						)}
