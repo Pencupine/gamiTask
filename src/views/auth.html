@@ -66,9 +66,9 @@
     firebase.initializeApp(require('../config').firebaseUI_config);
 
     // ipcRenderer.on('signOutUser', (event, value) => {
-      firebase.auth().signOut().then(() => {
-          console.log('signed out user');
-        });
+      // firebase.auth().signOut().then(() => {
+      //     console.log('signed out user');
+      //   });
     // })
 
     firebase.auth().onAuthStateChanged(function(user) {
