@@ -101,16 +101,19 @@
         }
       });
 
-      electron.ipcRenderer.on('signOutUser', (event, value) => {
+      electron.ipcRenderer.on('signOutUser', (event, redirectToSignIn) => {
         console.log('signingOut');
         firebase
           .auth()
           .signOut()
           .then(() => {
             console.log('signed out user');
+            if (redirectToSignIn) {
+              showFirebaseUI();
+            } else {
+              // electron.ipcRenderer.send('closeAuthWindow', null);
+            }
           });
-        document.getElementById('firebaseui-auth-container').style.display =
-          'inline';
       });
 
       var ui = new firebaseui.auth.AuthUI(firebase.auth());
