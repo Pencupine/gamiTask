@@ -24,9 +24,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- END OF HEAD -->
   </head>
   <body>
-    <!-- <div class="container h-100 text-center"> -->
+    <!-- ui Structure -->
     <div id="firebaseui-auth-container"></div>
     <div id="loader" class="row mx-auto text-center h-100">
       <div class="col-12 auto align-item-center h-100">
@@ -44,48 +45,41 @@
         ></div>
       </div>
     </div>
-    <!-- </div> -->
-
+    <!-- End of ui Structure -->
+    
     <script>
       console.log('RENDERING AUTH PAGE');
-
+      
+      // imports------------
       const electron = require('electron');
+      const electronStorage = require('electron-json-storage');
 
-      setLoadingScreen();
-
-      // Loading Screen function
-      function setLoadingScreen() {
-        document.getElementById('firebaseui-auth-container').style.display =
-          'none';
-        document.getElementById('loader').style.display = 'inline';
-        document.getElementById('signingin').style.display = 'none';
-      }
-
-      // Show Firebase UI
-      function showFirebaseUI() {
-        document.getElementById('firebaseui-auth-container').style.display =
-          'inline';
-        document.getElementById('loader').style.display = 'none';
-        document.getElementById('signingin').style.display = 'none';
-      }
-
-      // Show Signingin Page
-      function showSigningIn() {
-        document.getElementById('firebaseui-auth-container').style.display =
-          'none';
-        document.getElementById('loader').style.display = 'none';
-        document.getElementById('signingin').style.display = 'inline';
-      }
-
-      // Firebase Auth----------------------------------------
+      const authUI = require('./authUI');
+      
+      // Firebase Auth initialization------------------------
       firebase.initializeApp(require('../config').firebaseUI_config);
+      
+      //
+      //-----------------------------------------------------
+      // Setting initial Loading Screen----------------------
+      authUI.setLoadingScreen();
+      //
+      //
+      //
 
-      // ipcRenderer.on('signOutUser', (event, value) => {
-      // firebase.auth().signOut().then(() => {
-      //     console.log('signed out user');
-      //   });
-      // })
+      // SIGN OUT IF NO TOKEN FOUND-------------------------------------------------
+      electronStorage.get('idToken', (error, data) => {
+        if(data.idToken === undefined){
+          console.log('token Not Found');
+          firebase.auth().signOut().then(() => {
+            console.log('signed out user');
+          });
+        } else {
+          console.log('token Found');
+        }
+      })
 
+      // CHECKING AUTH STATUS IN FRONT END ------------------------------------------
       firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
           firebase
@@ -93,29 +87,24 @@
             .currentUser.getIdToken(false)
             .then(idToken => {
               console.log(idToken);
-              showSigningIn();
+              authUI.showSigningIn();
               electron.ipcRenderer.send('signInUserInBackEnd', idToken);
             });
         } else {
-          showFirebaseUI();
+          authUI.showFirebaseUI();
         }
       });
 
-      electron.ipcRenderer.on('signOutUser', (event, redirectToSignIn) => {
-        console.log('signingOut');
-        firebase
-          .auth()
-          .signOut()
-          .then(() => {
-            console.log('signed out user');
-            if (redirectToSignIn) {
-              showFirebaseUI();
-            } else {
-              // electron.ipcRenderer.send('closeAuthWindow', null);
-            }
-          });
-      });
+      //
+      //
+      //
+      //
+      //
+      //
 
+      //-------------------------------------------------------------------------------
+      // Firebase UI Configuration-----------------------------------------------------
+      
       var ui = new firebaseui.auth.AuthUI(firebase.auth());
 
       var uiConfig = {
@@ -131,6 +120,13 @@
       };
 
       ui.start('#firebaseui-auth-container', uiConfig);
+      // Firebase config end ----------------XXX
+      //
+      //
+      //
+      //
+      //
+      //
     </script>
   </body>
 </html>

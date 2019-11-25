@@ -5,7 +5,8 @@ const path = require('path');
 const isDev = require('electron-is-dev');
 
 const dbConnection = require('./services/dbConnection');
-const auth = require('./services/auth/auth');
+const auth = require('./services/auth/auth.service');
+const storage = require('./services/storage/token.service');
 
 // --------For easy reloading in dev environment--------------------
 if (isDev) {
@@ -101,20 +102,14 @@ ipcMain.on('closeWindow', (event, value) => {
 // ================================================================================================
 //                                         FIREBASE OPERATIONS
 // ------------------------------------------------------------------------------------------------
-// app.on('ready', () => {
-// 	console.log('APP IS READY. CHECKING AUTH.');
-// 	auth.checkAuthState(mainWindow);
-// });
-auth.removeToken('idToken').then(data => {
-	console.log('Removed idToken : ', data);
-});
-auth.getToken('idToken').then(data => {
-	console.log(data);
+app.on('ready', () => {
+	console.log('APP IS READY. CHECKING AUTH.');
+	auth.checkAuthState(mainWindow, false);
 });
 
 ipcMain.on('openSignUp', (event, value) => {
 	console.log('Opening Browser');
-	auth.startAuthWindow(mainWindow);
+	auth.startAuthWindow(mainWindow, true);
 });
 
 ipcMain.on('signInUserInBackEnd', (event, value) => {
@@ -122,33 +117,13 @@ ipcMain.on('signInUserInBackEnd', (event, value) => {
 	auth.signInUser(value, mainWindow);
 });
 
-ipcMain.on('signOutFromNav', event => {
+ipcMain.on('signOutFromNav', async event => {
 	console.log('LOGGING OUT USER');
-	async () => {
-		await auth.startAuthWindow(mainWindow);
-	};
-	auth.signOutUser();
+	await storage.removeToken('idToken');
+	auth.startAuthWindow(mainWindow, false);
+	mainWindow.webContents.send('redirectToHome', false);
 });
 
-// app.on('ready', () => {
-// 	console.log('APP IS READY. CHECKING AUTH.');
-// 	auth.checkAuthState(mainWindow, redirectToHome);
-// });
-
-// ipcMain.on('openSignUp', (event, value) => {
-// 	console.log('Opening Browser');
-// 	auth.startAuthWindow(mainWindow);
-// });
-
-// ipcMain.on('signInUser', (event, value) => {
-// 	auth.signOutUser();
-// 	console.log('\nSENDING USER SIGN IN REQUEST THROUGH IPC MAIN');
-// 	auth.signInUser(value, mainWindow, redirectToHome);
-// });
-
-// function redirectToHome() {
-// 	mainWindow.webContents.send('redirectToHome', null);
-// }
 // ---------------------------XXX------------------------------
 
 //
