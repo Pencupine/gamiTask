@@ -31,7 +31,7 @@ async function startAuthWindow(mainWindow, showWindow) {
 		height: 500,
 		modal: true,
 		show: false,
-		// frame: false,
+		frame: false,
 		webPreferences: {
 			nodeIntegration: true,
 			webviewTag: true
@@ -67,10 +67,10 @@ async function startAuthWindow(mainWindow, showWindow) {
 //
 
 // SIGN IN USER----------------------------------------------
-async function signInUser(idToken, mainWindow) {
+async function signInUser(idToken, mainWindow, sendUIAuthState) {
 	console.log('\n SIGNING IN USER WITH TOKEN');
 	await storage.saveToken('idToken', { idToken: idToken });
-	checkAuthState(mainWindow, true);
+	checkAuthState(mainWindow, true, sendUIAuthState);
 }
 
 //
@@ -79,7 +79,7 @@ async function signInUser(idToken, mainWindow) {
 //
 
 // AUTH STATE CHECK-------------------------------------------
-async function checkAuthState(mainWindow, showWindow) {
+async function checkAuthState(mainWindow, showWindow, sendUIAuthState) {
 	console.log('\n CHECKING AUTH STATE');
 
 	const data = await storage.getToken('idToken');
@@ -90,26 +90,26 @@ async function checkAuthState(mainWindow, showWindow) {
 
 		if (await checkTokenState(data.idToken)) {
 			console.log('        CHECK RESULT : User in session');
-			handleInterfaceRedirection(mainWindow, true, showWindow);
+			handleInterfaceRedirection(mainWindow, true, showWindow, sendUIAuthState);
 		} else {
 			console.log('        CHECK RESULT : User session expired. Removing ID');
-			// Remove idToken
 			await storage.removeToken('idToken');
-			handleInterfaceRedirection(mainWindow, false, showWindow);
+			handleInterfaceRedirection(mainWindow, false, showWindow, sendUIAuthState);
 		}
 	} else {
 		console.log('\nTOKEN NOT FOUND');
-		handleInterfaceRedirection(mainWindow, false, showWindow);
+		handleInterfaceRedirection(mainWindow, false, showWindow, sendUIAuthState);
 	}
 }
 
-function handleInterfaceRedirection(mainWindow, logIn, showWindow) {
+// HANDLE UI SIGN IN AND SIGN OUT AUTH STATE-----------------------
+function handleInterfaceRedirection(mainWindow, logIn, showWindow, sendUIAuthState) {
 	if (logIn) {
 		console.log('Logging IN User in UI');
 		// close signUpchildwindow if its showing
 		if (signUpChildWindow !== null) signUpChildWindow.hide();
 		// Redirect to home
-		mainWindow.webContents.send('redirectToHome', logIn);
+		// mainWindow.webContents.send('redirectToHome', logIn);
 	} else {
 		console.log('Logging OUT User in UI');
 		// if signUpChildWindow is close.... open it if neccessary. If open just reload;
@@ -117,8 +117,9 @@ function handleInterfaceRedirection(mainWindow, logIn, showWindow) {
 			if (showWindow) startAuthWindow(mainWindow, true);
 		} else signUpChildWindow.reload();
 		// Redirect away from home
-		mainWindow.webContents.send('redirectToHome', logIn);
+		// mainWindow.webContents.send('redirectToHome', logIn);
 	}
+	sendUIAuthState(logIn);
 }
 
 //

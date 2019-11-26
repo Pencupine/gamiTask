@@ -102,27 +102,38 @@ ipcMain.on('closeWindow', (event, value) => {
 // ================================================================================================
 //                                         FIREBASE OPERATIONS
 // ------------------------------------------------------------------------------------------------
+// User opens app and auth check is done redirects if user is in session.
 app.on('ready', () => {
 	console.log('APP IS READY. CHECKING AUTH.');
-	auth.checkAuthState(mainWindow, false);
+	auth.checkAuthState(mainWindow, false, sendUIAuthState);
 });
 
+// When user is not authenticated from the token... User click on the sign up button
 ipcMain.on('openSignUp', (event, value) => {
 	console.log('Opening Browser');
 	auth.startAuthWindow(mainWindow, true);
 });
 
+// Signing in backend when user signs in firebase front end in child window
 ipcMain.on('signInUserInBackEnd', (event, value) => {
 	console.log('SENDING USER SIGNINFO and STATE TO MAINWINDOW');
-	auth.signInUser(value, mainWindow);
+	auth.signInUser(value, mainWindow, sendUIAuthState);
 });
 
+// Req : Log Out from Nav Bar
+// Res : Delete Tokena and redirect out
 ipcMain.on('signOutFromNav', async event => {
 	console.log('LOGGING OUT USER');
 	await storage.removeToken('idToken');
 	auth.startAuthWindow(mainWindow, false);
 	mainWindow.webContents.send('redirectToHome', false);
 });
+
+// To command redirection when signed in or out
+//  ///////////////////////////////////////      " T O   B E   D E P R E C A T E D "   by using    "R E D U X"
+function sendUIAuthState(authState) {
+	mainWindow.webContents.send('redirectToHome', authState);
+}
 
 // ---------------------------XXX------------------------------
 

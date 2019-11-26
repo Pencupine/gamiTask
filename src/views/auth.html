@@ -30,7 +30,7 @@
     <!-- ui Structure -->
     <div id="firebaseui-auth-container"></div>
     <div id="loader" class="row mx-auto text-center h-100">
-      <div class="col-12 auto align-item-center h-100">
+      <div class="col-12 auto align-item-center h-100" style="padding-top: 40%;">
         <div
           class="spinner-grow text-secondary"
           style="width: 3rem; height: 3rem;"
@@ -38,7 +38,7 @@
       </div>
     </div>
     <div id="signingin" class="row mx-auto text-center h-100">
-      <div class="col-12 auto align-item-center h-100">
+      <div class="col-12 auto align-item-center h-100" style="padding-top: 40%;">
         <div
           class="spinner-border text-secondary"
           style="width: 3rem; height: 3rem;"
@@ -48,26 +48,30 @@
     <!-- End of ui Structure -->
     
     <script>
+
       console.log('RENDERING AUTH PAGE');
+
       
+      
+      // --------------------------------------------------------------------------------------------------
+      // -------------------------------------AUTH PAGE FIREBASE LOGIC-------------------------------------
+      // --------------------------------------------------------------------------------------------------
+      // 
       // imports------------
       const electron = require('electron');
       const electronStorage = require('electron-json-storage');
-
+      
       const authUI = require('./authUI');
       
       // Firebase Auth initialization------------------------
       firebase.initializeApp(require('../config').firebaseUI_config);
       
-      //
       //-----------------------------------------------------
       // Setting initial Loading Screen----------------------
       authUI.setLoadingScreen();
       //
-      //
-      //
 
-      // SIGN OUT IF NO TOKEN FOUND-------------------------------------------------
+      // SIGN OUT IF NO TOKEN FOUND------------------------------------------
       electronStorage.get('idToken', (error, data) => {
         if(data.idToken === undefined){
           console.log('token Not Found');
@@ -79,7 +83,7 @@
         }
       })
 
-      // CHECKING AUTH STATUS IN FRONT END ------------------------------------------
+      // CHECKING AUTH STATUS IN FRONT END ----------------------------------
       firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
           firebase
@@ -127,6 +131,13 @@
       //
       //
       //
+      //
+      //----------------------------XXX---------------------------------------------------
+
+      //
+      //
+      //
+
     </script>
   </body>
 </html>
