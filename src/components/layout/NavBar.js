@@ -59,6 +59,9 @@ class NavBar extends Component {
 		ipcRenderer.send('closeWindow', val);
 	}
 	render() {
+		ipcRenderer.on('redirectToHome', (event, value) => {
+			console.log('Redirecting to home');
+		});
 		return (
 			<div className="navBar fixedToTop dragable">
 				<nav className="bp3-navbar bp3-dark .modifier">
@@ -214,7 +217,13 @@ class NavBar extends Component {
 								</button>
 							</Link>
 						</Tooltip>
-						<button className="bp3-button bp3-minimal non-dragable">
+						<button
+							className="bp3-button bp3-minimal non-dragable"
+							onClick={() => {
+								ipcRenderer.send('signOutFromNav', null);
+								console.log('Sign Out');
+							}}
+						>
 							<Icon icon="user" />
 						</button>
 						<span className="bp3-navbar-divider" />
@@ -222,7 +231,7 @@ class NavBar extends Component {
 							<Icon icon="minus" />
 						</button>
 						{this.state.fullscreen ? (
-							<button className="bp3-button bp3-minimal non-dragable" onClick={this.unmaximizeWindow}>
+							<button className="bp3-button bp3-minimal non-dragable" onClick={this.unmaxmizeWindow}>
 								<Icon icon="applications" />
 							</button>
 						) : (

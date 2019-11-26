@@ -4,7 +4,9 @@ const url = require('url');
 const path = require('path');
 const isDev = require('electron-is-dev');
 
-const dbConnection = require('./services/database/dbConnection');
+const dbConnection = require('./services/dbConnection');
+const auth = require('./services/auth/auth.service');
+const storage = require('./services/storage/token.service');
 
 // --------For easy reloading in dev environment--------------------
 if (isDev) {
@@ -100,47 +102,39 @@ ipcMain.on('closeWindow', (event, value) => {
 // ================================================================================================
 //                                         FIREBASE OPERATIONS
 // ------------------------------------------------------------------------------------------------
-let signUpChildWindow = null;
+// User opens app and auth check is done redirects if user is in session.
+app.on('ready', () => {
+	console.log('APP IS READY. CHECKING AUTH.');
+	auth.checkAuthState(mainWindow, false, sendUIAuthState);
+});
 
-// var firebase = require('firebase');
-// var firebaseui = require('firebaseui');
-
+// When user is not authenticated from the token... User click on the sign up button
 ipcMain.on('openSignUp', (event, value) => {
 	console.log('Opening Browser');
-	signUpChildWindow = new BrowserWindow({
-		parent: mainWindow,
-		width: 500,
-		height: 500,
-		modal: true,
-		show: false,
-		webPreferences: {
-			nodeIntegration: true,
-			webviewTag: true
-		}
-	});
-	console.log('BrowserWindow Generated');
-
-	signUpChildWindow.loadURL(
-		url.format({
-			pathname: path.join(__dirname, 'auth/auth.html'),
-			protocol: 'file:',
-			slashes: true
-		})
-	);
-
-	signUpChildWindow.on('ready-to-show', () => {
-		console.log('readyToSHow');
-		signUpChildWindow.show();
-	});
-
-	signUpChildWindow.on('closed', function() {
-		signUpChildWindow = null;
-	});
+	auth.startAuthWindow(mainWindow, true);
 });
 
-ipcMain.on('saveToken', (event, value) => {
-	console.log(value);
+// Signing in backend when user signs in firebase front end in child window
+ipcMain.on('signInUserInBackEnd', (event, value) => {
+	console.log('SENDING USER SIGNINFO and STATE TO MAINWINDOW');
+	auth.signInUser(value, mainWindow, sendUIAuthState);
 });
+
+// Req : Log Out from Nav Bar
+// Res : Delete Tokena and redirect out
+ipcMain.on('signOutFromNav', async event => {
+	console.log('LOGGING OUT USER');
+	await storage.removeToken('idToken');
+	auth.startAuthWindow(mainWindow, false);
+	mainWindow.webContents.send('redirectToHome', false);
+});
+
+// To command redirection when signed in or out
+//  ///////////////////////////////////////      " T O   B E   D E P R E C A T E D "   by using    "R E D U X"
+function sendUIAuthState(authState) {
+	mainWindow.webContents.send('redirectToHome', authState);
+}
+
 // ---------------------------XXX------------------------------
 
 //

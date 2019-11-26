@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style></style>
+    <!-- Firebase CDN -->
+    <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css"
+    />
+    <script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-auth.js"></script>
+
+    <!-- BootStrap CDN-->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- END OF HEAD -->
+  </head>
+  <body>
+    <!-- ui Structure -->
+    <div id="firebaseui-auth-container"></div>
+    <div id="loader" class="row mx-auto text-center h-100">
+      <div class="col-12 auto align-item-center h-100" style="padding-top: 40%;">
+        <div
+          class="spinner-grow text-secondary"
+          style="width: 3rem; height: 3rem;"
+        ></div>
+      </div>
+    </div>
+    <div id="signingin" class="row mx-auto text-center h-100">
+      <div class="col-12 auto align-item-center h-100" style="padding-top: 40%;">
+        <div
+          class="spinner-border text-secondary"
+          style="width: 3rem; height: 3rem;"
+        ></div>
+      </div>
+    </div>
+    <!-- End of ui Structure -->
+    
+    <script>
+
+      console.log('RENDERING AUTH PAGE');
+
+      
+      
+      // --------------------------------------------------------------------------------------------------
+      // -------------------------------------AUTH PAGE FIREBASE LOGIC-------------------------------------
+      // --------------------------------------------------------------------------------------------------
+      // 
+      // imports------------
+      const electron = require('electron');
+      const electronStorage = require('electron-json-storage');
+      
+      const authUI = require('./authUI');
+      
+      // Firebase Auth initialization------------------------
+      firebase.initializeApp(require('../config').firebaseUI_config);
+      
+      //-----------------------------------------------------
+      // Setting initial Loading Screen----------------------
+      authUI.setLoadingScreen();
+      //
+
+      // SIGN OUT IF NO TOKEN FOUND------------------------------------------
+      electronStorage.get('idToken', (error, data) => {
+        if(data.idToken === undefined){
+          console.log('token Not Found');
+          firebase.auth().signOut().then(() => {
+            console.log('signed out user');
+          });
+        } else {
+          console.log('token Found');
+        }
+      })
+
+      // CHECKING AUTH STATUS IN FRONT END ----------------------------------
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          firebase
+            .auth()
+            .currentUser.getIdToken(false)
+            .then(idToken => {
+              console.log(idToken);
+              authUI.showSigningIn();
+              electron.ipcRenderer.send('signInUserInBackEnd', idToken);
+            });
+        } else {
+          authUI.showFirebaseUI();
+        }
+      });
+
+      //
+      //
+      //
+      //
+      //
+      //
+
+      //-------------------------------------------------------------------------------
+      // Firebase UI Configuration-----------------------------------------------------
+      
+      var ui = new firebaseui.auth.AuthUI(firebase.auth());
+
+      var uiConfig = {
+        callbacks: {
+          signInSuccessWithAuthResult: function(authResult, redirectUrl) {
+            return false;
+          }
+        },
+        signInFlow: 'redirect',
+        signInOptions: [
+          firebase.auth.EmailAuthProvider.PROVIDER_ID
+        ]
+      };
+
+      ui.start('#firebaseui-auth-container', uiConfig);
+      // Firebase config end ----------------XXX
+      //
+      //
+      //
+      //
+      //
+      //
+      //
+      //----------------------------XXX---------------------------------------------------
+
+      //
+      //
+      //
+
+    </script>
+  </body>
+</html>
