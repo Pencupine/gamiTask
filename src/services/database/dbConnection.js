@@ -1,53 +1,20 @@
 const fs = require("fs");
 
 // Database File URL-------------------
-const fileName = `C:/Users/LENOVO/Documents/gamiTask/data.json`;
+const fileName = `${process.env.LOCALAPPDATA}/gamiTask/data.json`;
 
 // Folder Check ----------------------- (To check if the folder exists)
 function folderCheck() {
-  if (!fs.existsSync("C:/Users/LENOVO/Documents/gamiTask"))
-    fs.mkdir("C:/Users/LENOVO/Documents/gamiTask", err => {
+  if (!fs.existsSync(`${process.env.LOCALAPPDATA}/gamiTask`))
+    fs.mkdir(`${process.env.LOCALAPPDATA}/gamiTask`, err => {
       if (err) console.log(err.message);
       else console.log("Folder Successfully Created!");
     });
 }
 
-//-----Initiated data----------------
+//-----Initiated dataModel----------------
 function createNewFile() {
-  var initiatedData = {
-    database: [
-      {
-        tasks: {
-          totalTasks: 0,
-          nextTaskID: 0,
-          order: [[], [[], [], []]],
-          allTasks: [
-            {
-              taskType: 0,
-              taskCards: []
-            },
-            {
-              taskType: 1,
-              kanbanCards: [
-                {
-                  kanbanType: 0,
-                  taskCards: []
-                },
-                {
-                  kanbanType: 1,
-                  taskCards: []
-                },
-                {
-                  kanbanType: 2,
-                  taskCards: []
-                }
-              ]
-            }
-          ]
-        }
-      }
-    ]
-  };
+  var initiatedData = require('./dbModel');
   return initiatedData;
 }
 
