@@ -4,7 +4,7 @@ const url = require('url');
 const path = require('path');
 const isDev = require('electron-is-dev');
 
-const dbConnection = require('./services/dbConnection');
+const dbConnection = require('./services/database/dbConnection');
 const auth = require('./services/auth/auth.service');
 const storage = require('./services/storage/token.service');
 
@@ -77,9 +77,7 @@ app.on('activate', function() {
 	if (mainWindow === null) createWindow();
 });
 
-// To add redux extension---------------------------------
-console.log(require('os').homedir());
-// BrowserWindow.addDevToolsExtension(path.join(require('os').homedir(), '/Library/Application Support/Google/Chrome/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/0.15.0_0'))
+//
 //
 //
 //
@@ -105,6 +103,17 @@ ipcMain.on('closeWindow', (event, value) => {
 
 	require('./utils/stupidConsoleMessages').exitMessage();
 });
+//
+// --------------------------------XXX
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 // ================================================================================================
 //                                         FIREBASE OPERATIONS
