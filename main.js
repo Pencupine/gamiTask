@@ -122,6 +122,12 @@ ipcMain.on('closeWindow', (event, value) => {
 app.on('ready', () => {
 	console.log('APP IS READY. CHECKING AUTH.');
 	auth.checkAuthState(mainWindow, false, sendUIAuthState);
+	BrowserWindow.addDevToolsExtension(
+		path.join(
+			require('os').homedir(),
+			'/AppData/Local/Google/Chrome/User Data/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/2.17.0_0'
+		)
+	);
 });
 
 // When user is not authenticated from the token... User click on the sign up button
