@@ -6,7 +6,7 @@ const isDev = require('electron-is-dev');
 
 const dbConnection = require('./services/database/dbConnection');
 const auth = require('./services/auth/auth.service');
-const storage = require('./services/storage/token.service');
+const cacheService = require('./services/storage/cache.service');
 
 // --------For easy reloading in dev environment--------------------
 if (isDev) {
@@ -94,7 +94,7 @@ ipcMain.on('maximizeWindow', (event, value) => {
 });
 
 ipcMain.on('unmaximizeWindow', (event, value) => {
-	mainWindow.unmaximize();
+	mainWindow.restore();
 });
 
 ipcMain.on('closeWindow', (event, value) => {
@@ -122,12 +122,6 @@ ipcMain.on('closeWindow', (event, value) => {
 app.on('ready', () => {
 	console.log('APP IS READY. CHECKING AUTH.');
 	auth.checkAuthState(mainWindow, false, sendUIAuthState);
-	BrowserWindow.addDevToolsExtension(
-		path.join(
-			require('os').homedir(),
-			'/AppData/Local/Google/Chrome/User Data/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/2.17.0_0'
-		)
-	);
 });
 
 // When user is not authenticated from the token... User click on the sign up button
@@ -146,7 +140,7 @@ ipcMain.on('signInUserInBackEnd', (event, value) => {
 // Res : Delete Tokena and redirect out
 ipcMain.on('signOutFromNav', async event => {
 	console.log('LOGGING OUT USER');
-	await storage.removeToken('idToken');
+	await cacheService.removeToken('idToken');
 	auth.startAuthWindow(mainWindow, false);
 	mainWindow.webContents.send('redirectToHome', false);
 });
@@ -169,6 +163,15 @@ function sendUIAuthState(authState) {
 //
 //
 
+//------------------------------------------Loading Redux Dev Tool-------------------------------------------
+app.on('ready', () => {
+	BrowserWindow.addDevToolsExtension(
+		path.join(
+			require('os').homedir(),
+			'/AppData/Local/Google/Chrome/User Data/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/2.17.0_0'
+		)
+	);
+});
 //
 //
 //
