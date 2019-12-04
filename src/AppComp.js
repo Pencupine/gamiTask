@@ -3,12 +3,12 @@ import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import Landing from './components/layout/Landing';
+import Landing from './components/layout/landing/Landing';
 import NavBar from './components/layout/navbar/NavBar';
 import LogIn from './components/auth/LogIn';
 import SignUp from './components/auth/SignUp';
 import Settings from './components/settings/Settings';
-import SideBar from './components/layout/SideBar';
+import SideBar from './components/layout/sidebar/SideBar';
 import Home from './components/workspaces/home/Home';
 import TaskMan from './components/workspaces/taskMan/TaskMan';
 import Notes from './components/workspaces/notes/Notes';
