@@ -1,24 +1,17 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
+import { Provider } from 'react-redux';
 
-import AppComp from "./AppComp";
+import AppComp from './AppComp';
+import store from './store/store';
 
 class App extends Component {
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //     showNav: false
-  //   };
-  //   this.toggleNavBar = this.toggleNavBar.bind(this);
-  // }
-
-  // toggleNavBar() {
-  //   // event.preventDefault();
-  //   this.setState({ showNav: true });
-  // }
-
-  render() {
-    return <AppComp />;
-  }
+	render() {
+		return (
+			<Provider store={store}>
+				<AppComp />
+			</Provider>
+		);
+	}
 }
 
 export default App;

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@blueprintjs/core';
 import { ipcRenderer } from 'electron';
-import electronStorage from 'electron-json-storage';
 
 class Landing extends Component {
 	constructor(props) {
@@ -42,7 +41,6 @@ class Landing extends Component {
 										intent={'primary'}
 										onClick={() => {
 											console.log('Continue Offline');
-											// this.props.toggleNavBar();
 										}}
 									>
 										<div className="col-md-12">Continue Offline</div>
