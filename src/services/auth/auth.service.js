@@ -69,7 +69,7 @@ async function startAuthWindow(mainWindow, showWindow) {
 // SIGN IN USER----------------------------------------------
 async function signInUser(idToken, mainWindow, sendUIAuthState) {
 	console.log('\n SIGNING IN USER WITH TOKEN');
-	await cacheService.saveToken('idToken', { idToken: idToken });
+	await cacheService.saveData('idToken', { idToken: idToken });
 	checkAuthState(mainWindow, true, sendUIAuthState);
 }
 
@@ -82,7 +82,7 @@ async function signInUser(idToken, mainWindow, sendUIAuthState) {
 async function checkAuthState(mainWindow, showWindow, sendUIAuthState) {
 	console.log('\n CHECKING AUTH STATE');
 
-	const data = await cacheService.getToken('idToken');
+	const data = await cacheService.getData('idToken');
 	console.log('\n Token undefined or not : ', data);
 
 	if (data.idToken !== undefined) {
@@ -93,7 +93,7 @@ async function checkAuthState(mainWindow, showWindow, sendUIAuthState) {
 			handleInterfaceRedirection(mainWindow, true, showWindow, sendUIAuthState);
 		} else {
 			console.log('        CHECK RESULT : User session expired. Removing ID');
-			await cacheService.removeToken('idToken');
+			await cacheService.removeData('idToken');
 			handleInterfaceRedirection(mainWindow, false, showWindow, sendUIAuthState);
 		}
 	} else {

@@ -140,7 +140,7 @@ ipcMain.on('signInUserInBackEnd', (event, value) => {
 // Res : Delete Tokena and redirect out
 ipcMain.on('signOutFromNav', async event => {
 	console.log('LOGGING OUT USER');
-	await cacheService.removeToken('idToken');
+	await cacheService.removeData('idToken');
 	auth.startAuthWindow(mainWindow, false);
 	mainWindow.webContents.send('redirectToHome', false);
 });
