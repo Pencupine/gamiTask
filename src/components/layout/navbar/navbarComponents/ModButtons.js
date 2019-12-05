@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { Icon, Position, Tooltip, Intent, Tab } from '@blueprintjs/core';
+import { Icon, Position, Tooltip } from '@blueprintjs/core';
 
 class ModButtons extends Component {
 	render() {

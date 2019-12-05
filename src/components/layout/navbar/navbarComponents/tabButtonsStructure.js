@@ -1,5 +1,3 @@
-import { Icon, Position, Tooltip, Intent } from '@blueprintjs/core';
-
 module.exports = [
 	{
 		elementType: 'tab',

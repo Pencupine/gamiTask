@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
-import { Icon } from '@blueprintjs/core';
+import { connect } from 'react-redux';
+import propTypes from 'prop-types';
 
 import TreeComp from '../../menu/TreeComp';
+import ObjectTools from './sidebarComponents/ObjectTools';
+import AddElement from './sidebarComponents/AddElement';
+import EditElement from './sidebarComponents/EditElement';
+import DeleteElement from './sidebarComponents/DeleteElement';
 
 class SideBar extends Component {
 	render() {
@@ -21,24 +26,7 @@ class SideBar extends Component {
 						>
 							<div style={{ width: '40px', paddingLeft: '8px' }}>
 								<div className="navBarPadding" />
-								<button
-									className="bp3-button bp3-minimal bp3-intent-primary non-dragable"
-									style={{ marginTop: '3px' }}
-								>
-									<Icon icon="new-object" iconSize={20} />
-								</button>
-								<button
-									className="bp3-button bp3-minimal bp3-intent-primary non-dragable"
-									style={{ marginTop: '3px' }}
-								>
-									<Icon icon="new-link" iconSize={20} />
-								</button>
-								<button
-									className="bp3-button bp3-minimal bp3-intent-primary  non-dragable"
-									style={{ marginTop: '3px' }}
-								>
-									<Icon icon="document" iconSize={20} />
-								</button>
+								<ObjectTools />
 								<hr
 									style={{
 										paddingLeft: '33px',
@@ -46,15 +34,7 @@ class SideBar extends Component {
 										opacity: '0.4'
 									}}
 								/>
-								<button className="bp3-button bp3-minimal  non-dragable" style={{ marginTop: '3px' }}>
-									<Icon icon="add" iconSize={20} />
-								</button>
-								<button className="bp3-button bp3-minimal non-dragable" style={{ marginTop: '3px' }}>
-									<Icon icon="new-text-box" iconSize={20} />
-								</button>
-								<button className="bp3-button bp3-minimal  non-dragable" style={{ marginTop: '3px' }}>
-									<Icon icon="th" iconSize={20} />
-								</button>
+								<AddElement />
 								<hr
 									style={{
 										paddingLeft: '33px',
@@ -62,18 +42,7 @@ class SideBar extends Component {
 										opacity: '0.4'
 									}}
 								/>
-								<button className="bp3-button bp3-minimal  non-dragable" style={{ marginTop: '3px' }}>
-									<Icon icon="edit" iconSize={20} />
-								</button>
-								<button className="bp3-button bp3-minimal  non-dragable" style={{ marginTop: '3px' }}>
-									<Icon icon="cut" iconSize={20} />
-								</button>
-								<button className="bp3-button bp3-minimal  non-dragable" style={{ marginTop: '3px' }}>
-									<Icon icon="duplicate" iconSize={20} />
-								</button>
-								<button className="bp3-button bp3-minimal  non-dragable" style={{ marginTop: '3px' }}>
-									<Icon icon="clipboard" iconSize={20} />
-								</button>
+								<EditElement />
 								<hr
 									style={{
 										paddingLeft: '33px',
@@ -81,12 +50,10 @@ class SideBar extends Component {
 										opacity: '0.4'
 									}}
 								/>
-								<button className="bp3-button bp3-minimal  non-dragable" style={{ marginTop: '3px' }}>
-									<Icon icon="delete" iconSize={20} />
-								</button>
+								<DeleteElement />
 							</div>
 						</div>
-						<div className="col">{this.props.menuOpen ? <TreeComp /> : ' '}</div>
+						<div className="col">{this.props.viewSideMenu ? <TreeComp /> : ' '}</div>
 					</div>
 				</div>
 			</div>
@@ -94,4 +61,12 @@ class SideBar extends Component {
 	}
 }
 
-export default SideBar;
+const mapStateToProps = state => ({
+	viewSideMenu: state.viewState.viewSideMenu
+});
+
+SideBar.propTypes = {
+	viewSideMenu: propTypes.bool.isRequired
+};
+
+export default connect(mapStateToProps)(SideBar);
