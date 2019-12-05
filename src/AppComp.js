@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import propType from 'prop-types';
 
 import Landing from './components/layout/landing/Landing';
 import NavBar from './components/layout/navbar/NavBar';
@@ -59,8 +59,8 @@ class AppComp extends Component {
 	}
 }
 
-AppComp.PropTypes = {
-	viewSideMenu: PropTypes.bool.isRequired
+AppComp.propType = {
+	viewSideMenu: propType.bool.isRequired
 };
 
 const mapStateToProps = state => ({
