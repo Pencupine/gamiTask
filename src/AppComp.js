@@ -36,7 +36,7 @@ class AppComp extends Component {
 						}}
 					>
 						<div style={{ gridColumnStart: '1' }}>
-							<SideBar menuOpen={this.props.viewSideMenu} />
+							<SideBar />
 						</div>
 						<Route exact path="/" component={Landing} />
 						<div style={{ gridColumnStart: '2' }}>
