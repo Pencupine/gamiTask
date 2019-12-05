@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Icon, Position, Tooltip, Intent, Tab } from '@blueprintjs/core';
-import { withRouter } from 'react-router-dom';
+import { Icon, Position, Tooltip } from '@blueprintjs/core';
 
 import history from '../../../../utils/history';
 class NavigationButtons extends Component {

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Icon, Position, Tooltip, Intent, Tab, Tabs } from '@blueprintjs/core';
+import { Icon } from '@blueprintjs/core';
 import { connect } from 'react-redux';
+import propTypes from 'prop-types';
 
 import { hideSideMenu, showSideMenu } from '../../../../store/actions/viewActions';
 
@@ -38,5 +39,11 @@ class SideMenuToggleButton extends Component {
 const mapStateToProps = state => ({
 	viewSideMenu: state.viewState.viewSideMenu
 });
+
+SideMenuToggleButton.propTypes = {
+	viewSideMenu: propTypes.bool.isRequired,
+	showSideMenu: propTypes.func.isRequired,
+	hideSideMenu: propTypes.func.isRequired
+};
 
 export default connect(mapStateToProps, { showSideMenu, hideSideMenu })(SideMenuToggleButton);
