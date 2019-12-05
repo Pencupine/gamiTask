@@ -24,6 +24,7 @@ class AppComp extends Component {
 	}
 
 	render() {
+		console.log(this.props.viewSideMenu);
 		return (
 			<div className="AppComp">
 				<Router>
