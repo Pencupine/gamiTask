@@ -6,7 +6,6 @@ import firebase from 'firebase';
 
 // Authorize Firebase User
 export const authUser = (userData, history) => dispatch => {
-	//loginUser(userData);
 	dispatch({
 		type: AUTH_USER,
 		payload: userData

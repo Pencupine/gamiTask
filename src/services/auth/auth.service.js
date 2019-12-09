@@ -133,7 +133,29 @@ function handleInterfaceRedirection(mainWindow, logIn, showWindow, sendUIAuthSta
 
 // CHECK TOKEN STATE---------------------------------------------
 async function checkTokenState(idToken) {
+	const data = await cacheService.getData('idToken');
+	console.log('\n Token undefined or not : ', data);
+
 	console.log('\n CHECKING TOKEN STATE');
+
+	return new Promise(resolve => {
+		admin
+			.auth()
+			.verifyIdToken(idToken, true)
+			.then(decodedData => {
+				const currentDate = new Date().getTime() / 1000;
+				const authState = !(currentDate > decodedData.exp);
+				console.log('\n authState : ', authState);
+				resolve(authState);
+			})
+			.catch(error => {
+				console.log(error);
+				resolve(false);
+			});
+	});
+}
+
+async function getUserData() {
 	// console.log(idToken);
 	return new Promise(resolve => {
 		admin
