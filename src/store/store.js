@@ -5,7 +5,7 @@ import cacheStorage from '../services/storage/cache.service';
 
 import rootReducer from './reducers';
 
-const initialState = {};
+// const initialState = {};
 
 // To save state to local storage-------------
 function saveToLocalStorage(state) {

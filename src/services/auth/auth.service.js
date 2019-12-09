@@ -159,5 +159,6 @@ async function checkTokenState(idToken) {
 
 // EXPORTS---------------------------------------------------------------------------
 exports.checkAuthState = checkAuthState;
+exports.checkTokenState = checkTokenState;
 exports.startAuthWindow = startAuthWindow;
 exports.signInUser = signInUser;
