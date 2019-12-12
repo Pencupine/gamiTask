@@ -1,5 +1,6 @@
 import { ipcRenderer } from 'electron';
-import history from '../../utils/history';
+import cacheStorage from '../storage/cache.service';
+import authService from './auth.service';
 
 function signOut() {
 	ipcRenderer.send('signOutFromNav', null);

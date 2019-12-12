@@ -1,11 +1,10 @@
 import { AUTH_USER } from './types';
-import { logoutUser } from '../../authJS';
-import axios from 'axios';
-import setAuthToken from '../../utils/setAuthToken';
-import firebase from 'firebase';
+// import { logoutUser } from '../../authJS';
+// import setAuthToken from '../../utils/setAuthToken';
 
 // Authorize Firebase User
-export const authUser = (userData, history) => dispatch => {
+export const authUser = userData => dispatch => {
+	console.log('AUTH ACTION CALLED WITH PAYLOAD : ', userData);
 	dispatch({
 		type: AUTH_USER,
 		payload: userData

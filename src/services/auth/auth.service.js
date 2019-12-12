@@ -157,20 +157,24 @@ async function checkTokenState(idToken) {
 
 async function getUserData() {
 	// console.log(idToken);
+	const data = await cacheService.getData('idToken');
 	return new Promise(resolve => {
-		admin
-			.auth()
-			.verifyIdToken(idToken, true)
-			.then(decodedData => {
-				const currentDate = new Date().getTime() / 1000;
-				const authState = !(currentDate > decodedData.exp);
-				console.log('\n authState : ', authState);
-				resolve(authState);
-			})
-			.catch(error => {
-				console.log(error);
-				resolve(false);
-			});
+		console.log('FETCHING USER DATA FROM FIREBASE');
+		if (data.idToken !== undefined) {
+			admin
+				.auth()
+				.verifyIdToken(data.idToken, true)
+				.then(decodedData => {
+					console.log('Fetched Data : ', decodedData);
+					resolve(decodedData);
+				})
+				.catch(error => {
+					console.log(error);
+					resolve(false);
+				});
+		} else {
+			resolve(false);
+		}
 	});
 }
 
@@ -184,3 +188,4 @@ exports.checkAuthState = checkAuthState;
 exports.checkTokenState = checkTokenState;
 exports.startAuthWindow = startAuthWindow;
 exports.signInUser = signInUser;
+exports.getUserData = getUserData;

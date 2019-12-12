@@ -7,9 +7,11 @@ import { ipcRenderer } from 'electron';
 import store from '../../../store/store';
 import cacheStorage from '../../../services/storage/cache.service';
 import authService from '../../../services/auth/auth.service';
-import checkAuthFromToken from '../../../services/auth/ui.auth.service';
+import { checkAuthFromToken } from '../../../services/auth/ui.auth.service';
+import { authUser } from '../../../store/actions/authActions';
 
 import Spinner from '../../commonUtils/Spinner';
+import Landing from '../../layout/landing/Landing';
 
 import { PURGE } from 'redux-persist';
 
@@ -23,31 +25,35 @@ class AuthorizedRoute extends Component {
 	}
 
 	componentWillMount() {
-		const checkAuth = checkAuthFromToken();
-		checkAuth.then(authState => {
-			if (authState) {
-				this.setState({
-					render: <Redirect to="/home" />
-				});
-			} else {
-				this.setState({
-					render: <div>{this.props.children}</div>
-				});
-			}
-		});
+		if (this.props.auth.isAuthenticated) {
+			const checkAuth = checkAuthFromToken();
+			checkAuth.then(authState => {
+				console.log(authState);
+				if (authState) {
+					this.setState({
+						render: <div>{this.props.children}</div>
+					});
+				} else {
+					this.setState({
+						render: (
+							<div>
+								<Landing />
+							</div>
+						)
+					});
+				}
+			});
+		} else {
+			this.setState({
+				render: (
+					<div>
+						<Landing />
+					</div>
+				)
+			});
+		}
 	}
 	render() {
-		ipcRenderer.on('redirectToHome', (event, authState) => {
-			if (authState) {
-				this.setState({
-					render: <div>{this.props.children}</div>
-				});
-			} else {
-				this.setState({
-					render: <Redirect to="/" />
-				});
-			}
-		});
 		return <div>{this.state.render}</div>;
 	}
 }

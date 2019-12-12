@@ -20,6 +20,7 @@ import Counter from './components/workspaces/counters/Counter';
 
 import AuthorizedRoute from './components/auth/authGates/AuthorizedRoute';
 import UnauthorizedRoute from './components/auth/authGates/UnauthorizedRoute';
+import AuthHandler from './components/auth/AuthHandler';
 
 class AppComp extends Component {
 	constructor(props) {
@@ -31,6 +32,7 @@ class AppComp extends Component {
 		return (
 			<div className="AppComp">
 				<Router>
+					<AuthHandler />
 					<NavBar />
 
 					<div
