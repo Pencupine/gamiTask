@@ -54,7 +54,8 @@ class AuthorizedRoute extends Component {
 		}
 	}
 	render() {
-		return <div>{this.state.render}</div>;
+		if (!this.props.auth.isAuthenticated) return <Redirect to="/" />;
+		else return <div>{this.state.render}</div>;
 	}
 }
 

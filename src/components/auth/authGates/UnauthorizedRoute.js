@@ -13,6 +13,7 @@ import Home from '../../workspaces/home/Home';
 import { PURGE } from 'redux-persist';
 import { ipcRenderer } from 'electron';
 import { authUser } from '../../../store/actions/authActions';
+import { Redirect } from 'react-router-dom';
 
 class UnauthorizedRoute extends Component {
 	constructor(props) {
@@ -24,7 +25,7 @@ class UnauthorizedRoute extends Component {
 	}
 
 	componentWillMount() {
-		if (this.props.auth.isAuthenticated) {
+		if (!this.props.auth.isAuthenticated) {
 			const checkAuth = checkAuthFromToken();
 			checkAuth.then(authState => {
 				console.log(authState);
@@ -53,7 +54,8 @@ class UnauthorizedRoute extends Component {
 		}
 	}
 	render() {
-		return <div>{this.state.render}</div>;
+		if (this.props.auth.isAuthenticated) return <Redirect to="/home" />;
+		else return <div>{this.state.render}</div>;
 	}
 }
 
