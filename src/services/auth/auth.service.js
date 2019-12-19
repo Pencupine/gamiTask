@@ -133,8 +133,11 @@ function handleInterfaceRedirection(mainWindow, logIn, showWindow, sendUIAuthSta
 
 // CHECK TOKEN STATE---------------------------------------------
 async function checkTokenState(idToken) {
+	const data = await cacheService.getData('idToken');
+	console.log('\n Token undefined or not : ', data);
+
 	console.log('\n CHECKING TOKEN STATE');
-	// console.log(idToken);
+
 	return new Promise(resolve => {
 		admin
 			.auth()
@@ -152,6 +155,29 @@ async function checkTokenState(idToken) {
 	});
 }
 
+async function getUserData() {
+	// console.log(idToken);
+	const data = await cacheService.getData('idToken');
+	return new Promise(resolve => {
+		console.log('FETCHING USER DATA FROM FIREBASE');
+		if (data.idToken !== undefined) {
+			admin
+				.auth()
+				.verifyIdToken(data.idToken, true)
+				.then(decodedData => {
+					console.log('Fetched Data : ', decodedData);
+					resolve(decodedData);
+				})
+				.catch(error => {
+					console.log(error);
+					resolve(false);
+				});
+		} else {
+			resolve(false);
+		}
+	});
+}
+
 //
 //
 //
@@ -159,5 +185,7 @@ async function checkTokenState(idToken) {
 
 // EXPORTS---------------------------------------------------------------------------
 exports.checkAuthState = checkAuthState;
+exports.checkTokenState = checkTokenState;
 exports.startAuthWindow = startAuthWindow;
 exports.signInUser = signInUser;
+exports.getUserData = getUserData;

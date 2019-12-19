@@ -141,7 +141,7 @@ ipcMain.on('signInUserInBackEnd', (event, value) => {
 ipcMain.on('signOutFromNav', async event => {
 	console.log('LOGGING OUT USER');
 	await cacheService.removeData('idToken');
-	auth.startAuthWindow(mainWindow, false);
+	// auth.startAuthWindow(mainWindow, false);
 	mainWindow.webContents.send('redirectToHome', false);
 });
 

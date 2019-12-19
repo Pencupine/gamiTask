@@ -18,15 +18,21 @@ import TagsGallery from './components/workspaces/tagsgallery/TagsGallery';
 import Archives from './components/workspaces/archives/Archives';
 import Counter from './components/workspaces/counters/Counter';
 
+import AuthorizedRoute from './components/auth/authGates/AuthorizedRoute';
+import UnauthorizedRoute from './components/auth/authGates/UnauthorizedRoute';
+import AuthHandler from './components/auth/AuthHandler';
+
 class AppComp extends Component {
 	constructor(props) {
 		super(props);
 	}
 
 	render() {
+		console.log(this.props.viewSideMenu);
 		return (
 			<div className="AppComp">
 				<Router>
+					<AuthHandler />
 					<NavBar />
 
 					<div
@@ -38,19 +44,92 @@ class AppComp extends Component {
 						<div style={{ gridColumnStart: '1' }}>
 							<SideBar />
 						</div>
-						<Route exact path="/" component={Landing} />
+						{/* ALL UNAUTHORIZED ROUTES */}
 						<div style={{ gridColumnStart: '2' }}>
-							<Route exact path="/login" component={LogIn} />
-							<Route exact path="/signup" component={SignUp} />
-							<Route path="/home" component={Home} />
-							<Route exact path="/settings" component={Settings} />
-							<Route exact path="/taskman" component={TaskMan} />
-							<Route exact path="/notes" component={Notes} />
-							<Route exact path="/calender" component={Calender} />
-							<Route exact path="/monies" component={Monies} />
-							<Route exact path="/tagsGallery" component={TagsGallery} />
-							<Route exact path="/archives" component={Archives} />
-							<Route exact path="/counter" component={Counter} />
+							<Switch>
+								<UnauthorizedRoute>
+									<Route exact path="/" component={Landing} />
+								</UnauthorizedRoute>
+							</Switch>
+							<Switch>
+								<UnauthorizedRoute>
+									<Route exact path="/login">
+										<LogIn />
+									</Route>
+								</UnauthorizedRoute>
+							</Switch>
+							<Switch>
+								<Route exact path="/signup">
+									<UnauthorizedRoute>
+										<SignUp />
+									</UnauthorizedRoute>
+								</Route>
+							</Switch>
+
+							{/* ALL AUTHORIZED ROUTES */}
+							<Switch>
+								<Route exact path="/home">
+									<AuthorizedRoute>
+										<Home />
+									</AuthorizedRoute>
+								</Route>
+							</Switch>
+							<Switch>
+								<Route exact path="/settings">
+									<AuthorizedRoute>
+										<Settings />
+									</AuthorizedRoute>
+								</Route>
+							</Switch>
+							<Switch>
+								<Route exact path="/taskman">
+									<AuthorizedRoute>
+										<TaskMan />
+									</AuthorizedRoute>
+								</Route>
+							</Switch>
+							<Switch>
+								<Route exact path="/notes">
+									<AuthorizedRoute>
+										<Notes />
+									</AuthorizedRoute>
+								</Route>
+							</Switch>
+							<Switch>
+								<Route exact path="/calender">
+									<AuthorizedRoute>
+										<Calender />
+									</AuthorizedRoute>
+								</Route>
+							</Switch>
+							<Switch>
+								<Route exact path="/monies">
+									<AuthorizedRoute>
+										<Monies />
+									</AuthorizedRoute>
+								</Route>
+							</Switch>
+							<Switch>
+								<Route exact path="/tagsGallery">
+									<AuthorizedRoute>
+										<TagsGallery />
+									</AuthorizedRoute>
+								</Route>
+							</Switch>
+							<Switch>
+								<Route exact path="/archives">
+									<AuthorizedRoute>
+										<Archives />
+									</AuthorizedRoute>
+								</Route>
+							</Switch>
+							<Switch>
+								<Route exact path="/counter">
+									<AuthorizedRoute>
+										<Counter />
+									</AuthorizedRoute>
+								</Route>
+							</Switch>
 						</div>
 					</div>
 				</Router>
