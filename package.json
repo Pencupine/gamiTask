@@ -29,7 +29,7 @@
     "gulp-css": "^0.1.0",
     "gulp-sass": "^4.0.2",
     "gulp-sourcemaps": "^2.6.5",
-    "node-sass": "^4.13.0"
+    "node-sass": "^4.13.1"
   },
   "build": {
     "appId": "pencupine.template.app",
