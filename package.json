@@ -47,7 +47,7 @@
     "electron-is-dev": "^1.1.0",
     "electron-json-storage": "^4.1.8",
     "firebase-admin": "^8.7.0",
-    "grpc": "^1.21.1",
+    "grpc": "^1.24.9",
     "react": "^16.8.6",
     "react-beautiful-dnd": "^11.0.5",
     "react-dom": "^16.8.6",
